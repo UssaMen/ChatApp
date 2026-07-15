@@ -52,38 +52,12 @@ body {
 
 }
 
-
-/* 吹き出し */
-/*.balloon {
-    padding: 10px 15px;
-    border-radius: 15px;
-    max-width: 250px;
-}*/
-
-
-/* 相手の色 */
-/*.other {
-    background: #444;
-    color: white;
-}*/
-
 .other {
-
     background:#333333;
-
 }
 
-
-/* 自分の色 */
-/*.mine {
-    background: #075e54;
-    color: white;
-}*/
-
 .mine {
-
     background:#094771;
-
 }
 
 .tool-button {
@@ -170,11 +144,33 @@ button {
     height:50px;
     background:#252526;
     border-bottom:1px solid #3c3c3c;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     padding:0 20px;
+
+}
+
+.title {
+
+    font-size:18px;
     font-weight:bold;
+    color:#ffffff;
+
+}
+
+.status {
+    font-size:13px;
+    color:#9cdcfe;
+}
+
+.user-input {
+
+    background:#1e1e1e;
+    padding:10px 20px;
+    border-bottom:1px solid #333;
 
 }
 
@@ -186,20 +182,22 @@ button {
 
 <header class="header">
 
-    <div>
+    <div class="title">
         TASK Workspace
     </div>
 
-    <div>
+    <div class="status">
         Online Chat
     </div>
 
 </header>
 
-名前：
-<input id="name" type="text">
+<div class="user-input">
 
-<h5>On</h5>
+    名前：
+    <input id="name" type="text">
+
+</div>
 
 <div class="layout">
 
@@ -263,8 +261,10 @@ ws.onmessage = function(event){
         document.getElementById("users");
 
 
-    users.innerHTML =
-        "🟢 " + data.users.join("<br>");
+users.innerHTML =
+    data.users.map(
+        user => "🟢 " + user
+    ).join("<br>");
 
 
     return;
