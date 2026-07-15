@@ -76,17 +76,34 @@ wss.on("connection", (ws) => {
 
         }
 
+        
+        if(data.type === "image"){
 
+            broadcast({
+
+                type:"image",
+                id:user.id,
+                name:user.name,
+                image:data.image
+
+            });
+
+            return;
+
+        }
 
         if(data.type === "message"){
-
 
             const messageData = {
 
                 type:"message",
                 id:user.id,
                 name:user.name,
-                text:data.text
+                text:data.text,
+                time:new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                })
 
             };
 

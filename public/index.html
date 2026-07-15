@@ -171,6 +171,14 @@ button {
     background:#1e1e1e;
     padding:10px 20px;
     border-bottom:1px solid #333;
+}
+
+.time {
+
+    font-size:11px;
+    color:#999;
+    text-align:right;
+    margin-top:5px;
 
 }
 
@@ -271,6 +279,45 @@ users.innerHTML =
 
 }
 
+if(data.type === "image"){
+
+
+    const messages =
+        document.getElementById("messages");
+
+
+    messages.innerHTML += `
+
+    <div class="message left">
+
+        <div>
+
+            <div class="name">
+                🖼️ ${data.name}
+            </div>
+
+
+            <img src="${data.image}"
+                 style="
+                 max-width:250px;
+                 border-radius:8px;
+                 ">
+
+        </div>
+
+    </div>
+
+    `;
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+
+    return;
+
+}
+
     const messages =
         document.getElementById("messages");
 
@@ -303,7 +350,13 @@ users.innerHTML =
                 ${data.name}
             </div>
             <div class="balloon ${color}">
+
                 ${data.text}
+
+                <div class="time">
+                    ${data.time || ""}
+                </div>
+
             </div>
         </div>
     </div>
@@ -372,6 +425,44 @@ function openChatGPT(){
     window.location.href = "https://chat.openai.com/";
 
 }
+
+document.addEventListener("paste", function(event){
+
+    const items = event.clipboardData.items;
+
+
+    for(let i = 0; i < items.length; i++){
+
+        const item = items[i];
+
+
+        if(item.type.indexOf("image") !== -1){
+
+            const file = item.getAsFile();
+
+
+            const reader = new FileReader();
+
+
+            reader.onload = function(){
+
+                ws.send(JSON.stringify({
+
+                    type:"image",
+                    image:reader.result
+
+                }));
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+
+    }
+
+});
 
 </script>
 
