@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
+const crypto = require("crypto");
 
 const app = express();
 
@@ -16,7 +17,29 @@ const wss = new WebSocket.Server({
 let users = new Map();
 
 
+
 wss.on("connection", (ws) => {
+
+
+    // 接続ごとに一意ID発行
+    const id = crypto.randomUUID();
+
+
+    users.set(ws, {
+        id: id,
+        name: ""
+    });
+
+
+
+    ws.send(JSON.stringify({
+
+        type: "id",
+        id: id
+
+    }));
+
+
 
 
     ws.on("message", (message) => {
@@ -25,16 +48,24 @@ wss.on("connection", (ws) => {
         const data = JSON.parse(message);
 
 
+        const user = users.get(ws);
+
+
+
         // 入室
         if(data.type === "join"){
 
-            users.set(ws, data.name);
+
+            user.name = data.name;
 
 
             broadcast({
-                type: "system",
-                message: data.name + " さんが入室しました"
+
+                type:"system",
+                message:data.name + " さんが入室しました"
+
             });
+
 
             return;
 
@@ -42,65 +73,84 @@ wss.on("connection", (ws) => {
 
 
 
-        // メッセージ送信
+
+        // メッセージ
         if(data.type === "message"){
 
+
             broadcast({
-                type: "message",
-                name: data.name,
-                text: data.text
+
+                type:"message",
+                id:user.id,
+                name:user.name,
+                text:data.text
+
             });
+
 
         }
 
 
     });
+
 
 
 
     ws.on("close", () => {
 
 
-        const name = users.get(ws);
+        const user = users.get(ws);
 
 
-        if(name){
+        if(user && user.name){
+
 
             broadcast({
+
                 type:"system",
-                message:name + " さんが退出しました"
+                message:user.name + " さんが退出しました"
+
             });
 
 
-            users.delete(ws);
-
         }
+
+
+        users.delete(ws);
 
 
     });
 
 
 });
+
 
 
 
 
 function broadcast(data){
 
-    users.forEach((name, client)=>{
+
+    users.forEach((user, client)=>{
+
 
         client.send(JSON.stringify(data));
 
+
     });
+
 
 }
 
 
 
-server.listen(process.env.PORT || 3000, () => {
 
-    console.log(
-        "チャット開始: http://localhost:3000"
-    );
 
-});
+server.listen(
+    process.env.PORT || 3000,
+    () => {
+
+        console.log("server start");
+
+    }
+);

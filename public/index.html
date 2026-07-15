@@ -106,6 +106,7 @@ const ws = new WebSocket(
 );
 
 let myName = "";
+let myId = "";
 
 ws.onopen = function(){
     myName =
@@ -115,6 +116,15 @@ ws.onopen = function(){
 ws.onmessage = function(event){
 
     const data = JSON.parse(event.data);
+
+    if(data.type === "id"){
+
+        myId = data.id;
+
+        return;
+
+    }
+
     const messages =
         document.getElementById("messages");
 
@@ -135,7 +145,7 @@ ws.onmessage = function(event){
     // 普通のメッセージ
     let position = "left";
     let color = "other";
-    if(data.name === myName){
+    if(data.id === myId){
         position = "right";
         color = "mine";
     }
@@ -186,9 +196,10 @@ function sendMessage(){
     }
 
     ws.send(JSON.stringify({
+
         type:"message",
-        name:name,
         text:input
+
     }));
     document.getElementById("input").value="";
 }
