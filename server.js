@@ -62,6 +62,12 @@ wss.on("connection", (ws) => {
 
             });
 
+            messages.forEach((msg)=>{
+
+                ws.send(JSON.stringify(msg));
+
+            }); 
+
 
             sendUserList();
 
