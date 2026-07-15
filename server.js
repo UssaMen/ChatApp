@@ -161,15 +161,6 @@ function broadcast(data){
 
 }
 
-function openChatGPT(){
-
-    window.open(
-        "https://chat.openai.com/",
-        "_blank"
-    );
-
-}
-
 // オンライン一覧送信
 function sendUserList(){
 
