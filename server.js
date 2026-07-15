@@ -16,7 +16,7 @@ const wss = new WebSocket.Server({
 
 // 接続中ユーザー
 let users = new Map();
-
+let messages = [];
 
 wss.on("connection", (ws) => {
 
@@ -72,18 +72,32 @@ wss.on("connection", (ws) => {
 
 
 
-        // メッセージ送信
         if(data.type === "message"){
 
 
-            broadcast({
+            const messageData = {
 
                 type:"message",
                 id:user.id,
                 name:user.name,
                 text:data.text
 
-            });
+            };
+
+
+            // 履歴へ保存
+            messages.push(messageData);
+
+
+            // 直近100件だけ残す
+            if(messages.length > 100){
+
+                messages.shift();
+
+            }
+
+
+            broadcast(messageData);
 
 
         }
