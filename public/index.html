@@ -69,6 +69,18 @@ body {
     color: white;
 }
 
+.tool-button {
+    background: #252526;
+    color: #d4d4d4;
+    border: 1px solid #3c3c3c;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.tool-button:hover {
+    background: #333333;
+}
+
 #users {
 
     background:#222;
@@ -105,13 +117,16 @@ button {
 
 <h5>On</h5>
 
-<div id="users">
-</div>
+<div id="users"></div>
 
 <div id="messages"></div>
 
 <input id="input" type="text" onkeydown="enterSend(event)">
 <button onclick="sendMessage()">送信</button>
+
+<button class="tool-button" button onclick="openChatGPT()">
+隠す
+</button>
 
 <script>
 
@@ -237,6 +252,25 @@ function enterSend(event) {
     if(event.key === "Enter") {
         sendMessage();
     }
+}
+
+document.addEventListener("keydown", function(event){
+
+    if(event.key === "F2"){
+
+        openChatGPT();
+
+    }
+
+});
+
+function openChatGPT(){
+
+    window.open(
+        "https://chat.openai.com/",
+        "_blank"
+    );
+
 }
 
 </script>
