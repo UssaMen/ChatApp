@@ -69,6 +69,15 @@ body {
     color: white;
 }
 
+#users {
+
+    background:#222;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:8px;
+
+}
+
 input {
     background: #333;
     color: white;
@@ -93,6 +102,11 @@ button {
 
 名前：
 <input id="name" type="text">
+
+<h3>オンライン</h3>
+
+<div id="users">
+</div>
 
 <div id="messages"></div>
 
@@ -124,6 +138,20 @@ ws.onmessage = function(event){
         return;
 
     }
+
+    if(data.type === "users"){
+
+    const users =
+        document.getElementById("users");
+
+
+    users.innerHTML =
+        "🟢 " + data.users.join("<br>");
+
+
+    return;
+
+}
 
     const messages =
         document.getElementById("messages");

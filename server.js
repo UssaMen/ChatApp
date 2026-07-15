@@ -66,6 +66,7 @@ wss.on("connection", (ws) => {
 
             });
 
+            sendUserList();  //追加
 
             return;
 
@@ -117,7 +118,8 @@ wss.on("connection", (ws) => {
 
 
         users.delete(ws);
-
+        
+        sendUserList();
 
     });
 
@@ -139,6 +141,34 @@ function broadcast(data){
 
     });
 
+
+}
+
+function sendUserList(){
+
+    const list = [];
+
+    users.forEach((user)=>{
+
+        if(user.name){
+
+            list.push(user.name);
+
+        }
+
+    });
+
+
+    users.forEach((user, client)=>{
+
+        client.send(JSON.stringify({
+
+            type:"users",
+            users:list
+
+        }));
+
+    });
 
 }
 
