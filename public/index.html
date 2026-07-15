@@ -182,6 +182,23 @@ button {
 
 }
 
+.chat-image {
+
+    max-width:250px;
+    border-radius:8px;
+    cursor:pointer;
+
+    transition:0.2s;
+
+}
+
+.chat-image.zoom {
+
+    max-width:800px;
+    position:relative;
+
+}
+
 </style>
 
 </head>
@@ -297,11 +314,11 @@ if(data.type === "image"){
             </div>
 
 
-            <img src="${data.image}"
-                 style="
-                 max-width:250px;
-                 border-radius:8px;
-                 ">
+            <img 
+                src="${data.image}"
+                class="chat-image"
+                onclick="zoomImage(this)"
+            >
 
         </div>
 
@@ -463,6 +480,26 @@ document.addEventListener("paste", function(event){
     }
 
 });
+
+function zoomImage(img){
+
+
+    if(img.classList.contains("zoom")){
+
+
+        img.classList.remove("zoom");
+
+
+    }else{
+
+
+        img.classList.add("zoom");
+
+
+    }
+
+
+}
 
 </script>
 
