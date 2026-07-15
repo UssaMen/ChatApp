@@ -13,18 +13,20 @@ body {
 }
 
 #messages {
-    width: 400px;
-    height: 450px;
-    border: 1px solid #333;
-    padding: 10px;
-    overflow-y: auto;
-    background: #222;
+
+    width:auto;
+    height:auto;
+    flex:1;
+    background:#1e1e1e;
+    border:1px solid #333;
+    padding:15px;
+
 }
 
 
 /* メッセージ全体 */
 .message {
-    margin: 10px;
+    margin:15px 5px;
     display: flex;
 }
 
@@ -43,30 +45,45 @@ body {
 
 /* 名前 */
 .name {
-    font-size: 12px;
-    color: #555;
+
+    font-size:13px;
+    color:#9cdcfe;
+    margin-bottom:4px;
+
 }
 
 
 /* 吹き出し */
-.balloon {
+/*.balloon {
     padding: 10px 15px;
     border-radius: 15px;
     max-width: 250px;
-}
+}*/
 
 
 /* 相手の色 */
-.other {
+/*.other {
     background: #444;
     color: white;
+}*/
+
+.other {
+
+    background:#333333;
+
 }
 
 
 /* 自分の色 */
-.mine {
+/*.mine {
     background: #075e54;
     color: white;
+}*/
+
+.mine {
+
+    background:#094771;
+
 }
 
 .tool-button {
@@ -83,10 +100,12 @@ body {
 
 #users {
 
-    background:#222;
-    padding:10px;
-    margin-bottom:10px;
-    border-radius:8px;
+    width:220px;
+    background:#252526;
+    border-right:1px solid #3c3c3c;
+    border-radius:0;
+    margin:0;
+    padding:15px;
 
 }
 
@@ -104,25 +123,109 @@ button {
     padding: 8px 15px;
 }
 
+.balloon {
+
+    padding:10px;
+    border-radius:6px;
+    background:#2d2d30;
+    border:1px solid #3c3c3c;
+    min-width:80px;
+
+}
+
+.layout {
+
+    display:flex;
+    height:80vh;
+
+}
+
+.chat-area {
+
+    flex:1;
+    display:flex;
+    flex-direction:column;
+
+}
+
+.input-area {
+
+    display:flex;
+    background:#252526;
+    padding:10px;
+    position:sticky;
+    bottom:0;
+
+}
+
+
+.input-area input {
+
+    flex:1;
+
+}
+
+.header {
+
+    height:50px;
+    background:#252526;
+    border-bottom:1px solid #3c3c3c;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    font-weight:bold;
+
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h5>TASK</h5>
+<header class="header">
+
+    <div>
+        TASK Workspace
+    </div>
+
+    <div>
+        Online Chat
+    </div>
+
+</header>
 
 名前：
 <input id="name" type="text">
 
 <h5>On</h5>
 
-<div id="users"></div>
+<div class="layout">
 
-<div id="messages"></div>
+    <div id="users">
+    </div>
 
-<input id="input" type="text" onkeydown="enterSend(event)">
-<button onclick="sendMessage()">送信</button>
+
+    <div class="chat-area">
+
+        <div id="messages">
+        </div>
+
+
+        <div class="input-area">
+
+            <input id="input" type="text" onkeydown="enterSend(event)">
+
+            <button onclick="sendMessage()">
+                送信
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <button class="tool-button" button onclick="openChatGPT()">
 隠す
