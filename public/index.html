@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>LINE風チャット</title>
+<title>ChatApp</title>
 
 <style>
 
@@ -83,67 +83,44 @@ button {
     padding: 8px 15px;
 }
 
-
 </style>
 
 </head>
 
-
 <body>
 
-<h1>チャット</h1>
-
+<h1>ChatApp</h1>
 
 名前：
 <input id="name" type="text">
 
-
 <div id="messages"></div>
 
-
-<input id="input" type="text">
+<input id="input" type="text" onkeydown="enterSend(event)">
 <button onclick="sendMessage()">送信</button>
 
-
-
 <script>
-
 
 const ws = new WebSocket(
     location.origin.replace("http", "ws")
 );
 
-
 let myName = "";
 
-
-
 ws.onopen = function(){
-
     myName =
         document.getElementById("name").value;
-
 };
-
-
 
 ws.onmessage = function(event){
 
-
     const data = JSON.parse(event.data);
-
-
     const messages =
         document.getElementById("messages");
 
-
-
     // 入退室メッセージ
     if(data.type === "system"){
-
-
         messages.innerHTML += `
-
         <div style="
             text-align:center;
             color:gray;
@@ -151,122 +128,80 @@ ws.onmessage = function(event){
         ">
             ${data.message}
         </div>
-
         `;
-
-
         return;
-
     }
-
-
 
     // 普通のメッセージ
-
     let position = "left";
     let color = "other";
-
-
     if(data.name === myName){
-
         position = "right";
         color = "mine";
-
     }
 
-
-
     messages.innerHTML += `
-
     <div class="message ${position}">
-
         <div>
-
             <div class="name">
                 ${data.name}
             </div>
-
             <div class="balloon ${color}">
                 ${data.text}
             </div>
-
         </div>
-
     </div>
-
     `;
 
-
+    // 追加：一番下へ移動
+    messages.scrollTop = messages.scrollHeight;
 };
 
-
-
-
-
 function sendMessage(){
-
 
     const name =
         document.getElementById("name").value;
 
-
     const input =
         document.getElementById("input").value;
 
-
-
     if(name === ""){
-
         alert("名前を入力してください");
         return;
-
     }
-
-
 
     // 初回だけ入室通知
     if(myName === ""){
 
         myName = name;
 
-
         ws.send(JSON.stringify({
-
             type:"join",
             name:name
-
         }));
-
     }
-
-
 
     if(input === ""){
-
         return;
-
     }
 
-
-
     ws.send(JSON.stringify({
-
         type:"message",
         name:name,
         text:input
-
     }));
-
-
-
     document.getElementById("input").value="";
-
-
 }
 
+function enterSend(event) {
+
+    if(event.key === "Enter") {
+        sendMessage();
+    }
+}
 
 </script>
 
-
 </body>
+
 </html>
