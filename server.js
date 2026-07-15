@@ -14,14 +14,14 @@ const wss = new WebSocket.Server({
 });
 
 
+// 接続中ユーザー
 let users = new Map();
-
 
 
 wss.on("connection", (ws) => {
 
 
-    // 接続ごとに一意ID発行
+    // 接続ごとにID発行
     const id = crypto.randomUUID();
 
 
@@ -33,12 +33,9 @@ wss.on("connection", (ws) => {
 
 
     ws.send(JSON.stringify({
-
         type: "id",
         id: id
-
     }));
-
 
 
 
@@ -46,7 +43,6 @@ wss.on("connection", (ws) => {
 
 
         const data = JSON.parse(message);
-
 
         const user = users.get(ws);
 
@@ -62,11 +58,13 @@ wss.on("connection", (ws) => {
             broadcast({
 
                 type:"system",
-                message:data.name + " さんが入室しました"
+                message:user.name + " さんが入室しました"
 
             });
 
-            sendUserList();  //追加
+
+            sendUserList();
+
 
             return;
 
@@ -74,8 +72,7 @@ wss.on("connection", (ws) => {
 
 
 
-
-        // メッセージ
+        // メッセージ送信
         if(data.type === "message"){
 
 
@@ -93,7 +90,6 @@ wss.on("connection", (ws) => {
 
 
     });
-
 
 
 
@@ -118,8 +114,10 @@ wss.on("connection", (ws) => {
 
 
         users.delete(ws);
-        
+
+
         sendUserList();
+
 
     });
 
@@ -129,7 +127,7 @@ wss.on("connection", (ws) => {
 
 
 
-
+// 全員へ送信
 function broadcast(data){
 
 
@@ -141,14 +139,19 @@ function broadcast(data){
 
     });
 
-
 }
 
+
+
+// オンライン一覧送信
 function sendUserList(){
+
 
     const list = [];
 
+
     users.forEach((user)=>{
+
 
         if(user.name){
 
@@ -159,14 +162,11 @@ function sendUserList(){
     });
 
 
-    users.forEach((user, client)=>{
 
-        client.send(JSON.stringify({
+    broadcast({
 
-            type:"users",
-            users:list
-
-        }));
+        type:"users",
+        users:list
 
     });
 
@@ -175,12 +175,10 @@ function sendUserList(){
 
 
 
+server.listen(process.env.PORT || 3000, () => {
 
-server.listen(
-    process.env.PORT || 3000,
-    () => {
+    console.log(
+        "チャット開始"
+    );
 
-        console.log("server start");
-
-    }
-);
+});
