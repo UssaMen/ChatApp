@@ -91,7 +91,9 @@ body {
 <script>
 
 
-const ws = new WebSocket("ws://localhost:3000");
+const ws = new WebSocket(
+    location.origin.replace("http", "ws")
+);
 
 
 let myName = "";
