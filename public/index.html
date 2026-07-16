@@ -126,19 +126,12 @@ button {
 }
 
 .balloon {
-
     padding:6px 10px;
-
     border-radius:6px;
-
     background:#2d2d30;
-
     border:1px solid #3c3c3c;
-
     min-width:80px;
-
     white-space:pre-wrap;
-
 }
 
 .layout {
@@ -247,7 +240,7 @@ button {
     font-size:11px;
     color:#999;
     text-align:right;
-    margin-top:5px;
+    margin-top:2px;
 
 }
 
@@ -519,7 +512,7 @@ if(data.type === "image"){
             </div>
             <div class="balloon ${color}">
 
-                ${data.text}
+                ${data.text.trim()}
 
                 <div class="time">
                     ${data.time || ""}
@@ -565,7 +558,7 @@ function sendMessage(){
     ws.send(JSON.stringify({
 
         type:"message",
-        text:input
+        text:input.trim()
 
     }));
     document.getElementById("input").value="";
