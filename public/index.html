@@ -346,9 +346,23 @@ ws.onmessage = function(event){
 
     if(data.type === "typing"){
 
-    alert(data.name + " 入力中");
+        const typing =
+            document.getElementById("typing");
 
-    return;
+
+        if(data.id !== myId && data.typing){
+
+            typing.innerHTML =
+                data.name + " さんが入力中...";
+
+        }else{
+
+            typing.innerHTML = "";
+
+        }
+
+
+        return;
 
     }
 
