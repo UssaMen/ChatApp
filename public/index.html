@@ -93,12 +93,23 @@ body {
 
 #users.collapsed {
 
-    width:40px;
+    width:50px;
     padding:0;
 
 }
 
-#users.collapsed * {
+#users.collapsed > * {
+    display:none;
+}
+
+#users.collapsed .users-icon {
+
+    display:block;
+
+}
+
+
+#users.collapsed #user-list {
 
     display:none;
 
@@ -200,6 +211,18 @@ button {
     border-bottom:1px solid #333;
 }
 
+.users-icon {
+
+    display:none;
+
+    text-align:center;
+
+    font-size:22px;
+
+    padding:10px;
+
+}
+
 .time {
 
     font-size:11px;
@@ -257,7 +280,11 @@ button {
 
 <div class="layout">
 
-    <div id="users">
+    <div class="users-icon">
+        👥
+    </div>
+
+    <div id="user-list">
     </div>
 
 
@@ -313,14 +340,14 @@ ws.onmessage = function(event){
 
     if(data.type === "users"){
 
-    const users =
-        document.getElementById("users");
+    const userList =
+        document.getElementById("user-list");
 
 
-users.innerHTML =
-    data.users.map(
-        user => "🟢 " + user
-    ).join("<br>");
+    userList.innerHTML =
+        data.users.map(
+            user => "🟢 " + user
+        ).join("<br>");
 
 
     return;
