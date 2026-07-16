@@ -303,16 +303,24 @@ if(data.type === "image"){
         document.getElementById("messages");
 
 
+    let position = "left";
+
+    if(data.id === myId){
+
+        position = "right";
+
+    }
+
+
     messages.innerHTML += `
 
-    <div class="message left">
+    <div class="message ${position}">
 
         <div>
 
             <div class="name">
                 🖼️ ${data.name}
             </div>
-
 
             <img 
                 src="${data.image}"
@@ -326,10 +334,7 @@ if(data.type === "image"){
 
     `;
 
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
+    scrollToBottom();
 
     return;
 
@@ -349,6 +354,7 @@ if(data.type === "image"){
             ${data.message}
         </div>
         `;
+        scrollToBottom();
         return;
     }
 
@@ -380,7 +386,7 @@ if(data.type === "image"){
     `;
 
     // 追加：一番下へ移動
-    messages.scrollTop = messages.scrollHeight;
+    scrollToBottom();
 };
 
 function sendMessage(){
@@ -498,6 +504,16 @@ function zoomImage(img){
 
     }
 
+
+}
+
+function scrollToBottom(){
+
+    const messages =
+        document.getElementById("messages");
+
+    messages.scrollTop =
+        messages.scrollHeight;
 
 }
 
