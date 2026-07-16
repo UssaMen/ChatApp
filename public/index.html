@@ -84,9 +84,18 @@ body {
     overflow:hidden;
 
 }
+
 #users.collapsed {
 
     width:40px;
+    padding:0;
+
+}
+
+#users.collapsed * {
+
+    display:none;
+
 }
 
 input {
@@ -223,13 +232,13 @@ button {
         TASK Workspace
     </div>
 
-    <button class="tool-button" onclick="toggleUsers()">
-    ☰
-    </button>
-
     <div class="status">
         Online Chat
     </div>
+
+    <button class="tool-button" onclick="toggleUsers()">
+    ☰
+    </button>
 
 </header>
 
