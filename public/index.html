@@ -131,6 +131,7 @@ button {
     background:#2d2d30;
     border:1px solid #3c3c3c;
     min-width:80px;
+    white-space: pre-wrap;
 }
 
 .layout {
@@ -353,7 +354,7 @@ button {
 
         <textarea id="input"
             onkeydown="enterSend(event)"
-            oninput="typing(); autoResize(this)"></textarea>
+            oninput="typing();"></textarea>
 
             <button onclick="sendMessage()">
                 送信
@@ -511,7 +512,7 @@ if(data.type === "image"){
             </div>
             <div class="balloon ${color}">
 
-                ${data.text.trim()}
+                ${formatMessage(data.text)}
 
                 <div class="time">
                     ${data.time || ""}
@@ -716,6 +717,15 @@ function autoResize(element){
 
     element.style.height =
         element.scrollHeight + "px";
+
+}
+
+function formatMessage(text){
+
+    return text
+        .replace(/\r\n/g, "\n")
+        .replace(/^[ \t]+/gm, "")
+        .trim();
 
 }
 
