@@ -174,16 +174,18 @@ button {
 
     border:1px solid #555;
 
-    padding:8px;
+    padding:4px 8px;
 
     resize:none;
 
-    overflow-y:auto;
+    overflow-y:hidden;
+
     height:20px;
     min-height:20px;
-
     max-height:120px;
-    padding:5px 8px;
+
+    line-height:20px;
+
     font-family:sans-serif;
 
 }
@@ -353,7 +355,7 @@ button {
 
         <textarea id="input"
             onkeydown="enterSend(event)"
-            oninput="typing();"></textarea>
+            oninput="typing(); autoResize(this);"></textarea>
 
             <button onclick="sendMessage()">
                 送信
@@ -711,8 +713,7 @@ function typing(){
 
 function autoResize(element){
 
-    element.style.height = "auto";
-
+    element.style.height = "20px";
 
     element.style.height =
         element.scrollHeight + "px";
