@@ -247,9 +247,9 @@ button {
 
 #typing {
 
-    height:20px;
-    color:#888;
-    font-size:12px;
+    height:30px;
+    color:red;
+    font-size:20px;
     padding-left:10px;
 
 }
@@ -346,24 +346,9 @@ ws.onmessage = function(event){
 
     if(data.type === "typing"){
 
-console.log("typing受信しました", data);
+    alert(data.name + " 入力中");
 
-        const typing =
-            document.getElementById("typing");
-
-
-        if(data.id !== myId && data.typing){
-
-            typing.innerHTML =
-                data.name + " さんが入力中...";
-
-        }else{
-
-            typing.innerHTML = "";
-
-        }
-
-        return; 
+    return;
 
     }
 
