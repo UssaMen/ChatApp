@@ -207,6 +207,16 @@ function sendUserList(){
 
 }
 
+function toggleUsers(){
+
+    const users =
+        document.getElementById("users");
+
+
+    users.classList.toggle("collapsed");
+
+}
+
 
 
 
