@@ -14,12 +14,17 @@ body {
 
 #messages {
 
-    width:auto;
-    height:auto;
-    flex:1;
+    flex: 1;
+
+    width: auto;
+    height: 0;
+
+    border: 1px solid #333;
+    padding: 15px;
+
+    overflow-y: auto;
+
     background:#1e1e1e;
-    border:1px solid #333;
-    padding:15px;
 
 }
 
@@ -117,18 +122,24 @@ button {
 .chat-area {
 
     flex:1;
+
     display:flex;
+
     flex-direction:column;
+
+    min-height:0;
 
 }
 
 .input-area {
 
     display:flex;
+
     background:#252526;
+
     padding:10px;
-    position:sticky;
-    bottom:0;
+
+    flex-shrink:0;
 
 }
 
