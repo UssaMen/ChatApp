@@ -245,6 +245,15 @@ button {
 
 }
 
+#typing {
+
+    height:20px;
+    color:#888;
+    font-size:12px;
+    padding-left:10px;
+
+}
+
 </style>
 
 </head>
@@ -290,13 +299,18 @@ button {
 
     <div class="chat-area">
 
+        <div id="typing"></div>
+
         <div id="messages">
         </div>
 
 
         <div class="input-area">
 
-            <input id="input" type="text" onkeydown="enterSend(event)">
+        <input id="input"
+            type="text"
+            onkeydown="enterSend(event)"
+            oninput="typing()">
 
             <button onclick="sendMessage()">
                 送信
@@ -327,6 +341,27 @@ ws.onopen = function(){
 };
 
 ws.onmessage = function(event){
+
+    if(data.type === "typing"){
+
+        const typing =
+            document.getElementById("typing");
+
+
+        if(data.id !== myId && data.typing){
+
+            typing.innerHTML =
+                data.name + " さんが入力中...";
+
+        }else{
+
+            typing.innerHTML = "";
+
+        }
+
+        return; 
+
+    }
 
     const data = JSON.parse(event.data);
 
@@ -582,6 +617,34 @@ function toggleUsers(){
 
 
     users.classList.toggle("collapsed");
+
+}
+
+let typingTimer;
+
+function typing(){
+
+    ws.send(JSON.stringify({
+
+        type:"typing",
+        typing:true
+
+    }));
+
+
+    clearTimeout(typingTimer);
+
+
+    typingTimer = setTimeout(()=>{
+
+        ws.send(JSON.stringify({
+
+            type:"typing",
+            typing:false
+
+        }));
+
+    },1000);
 
 }
 

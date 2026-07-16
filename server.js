@@ -92,6 +92,21 @@ wss.on("connection", (ws) => {
 
         }
 
+        if(data.type === "typing"){
+
+            broadcast({
+
+                type:"typing",
+                id:user.id,
+                name:user.name,
+                typing:data.typing
+
+            });
+
+            return;
+
+        }
+
         if(data.type === "message"){
 
             const messageData = {
@@ -206,17 +221,6 @@ function sendUserList(){
     });
 
 }
-
-function toggleUsers(){
-
-    const users =
-        document.getElementById("users");
-
-
-    users.classList.toggle("collapsed");
-
-}
-
 
 
 
