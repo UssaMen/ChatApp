@@ -757,6 +757,12 @@ function sendUrgent(){
         return;
     }
 
+    if(!text.startsWith("🚨")){
+
+        text = "🚨 " + text;
+
+    }
+
 
     ws.send(JSON.stringify({
 
