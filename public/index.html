@@ -280,6 +280,18 @@ button {
 
 }
 
+.urgent {
+
+    background:#8b0000;
+
+    color:white;
+
+    border:2px solid red;
+
+    font-weight:bold;
+
+}
+
 
 @keyframes dots {
 
@@ -356,6 +368,10 @@ button {
         <textarea id="input"
             onkeydown="enterSend(event)"
             oninput="typing(); autoResize(this);"></textarea>
+
+            <button onclick="sendUrgent()">
+                🚨緊急
+            </button>
 
             <button onclick="sendMessage()">
                 送信
@@ -500,6 +516,14 @@ if(data.type === "image"){
     // 普通のメッセージ
     let position = "left";
     let color = "other";
+    let urgentClass = "";
+
+    if(data.urgent){
+
+        urgentClass = "urgent";
+
+    }
+
     if(data.id === myId){
         position = "right";
         color = "mine";
@@ -511,7 +535,7 @@ if(data.type === "image"){
             <div class="name">
                 ${data.name}
             </div>
-            <div class="balloon ${color}">
+            <div class="balloon ${color} ${urgentClass}">
 
                 ${data.text.replace(/\n/g, "<br>")}
 
@@ -717,6 +741,33 @@ function autoResize(element){
 
     element.style.height =
         element.scrollHeight + "px";
+
+}
+
+function sendUrgent(){
+
+    const input =
+        document.getElementById("input");
+
+
+    const text = input.value;
+
+
+    if(text === ""){
+        return;
+    }
+
+
+    ws.send(JSON.stringify({
+
+        type:"message",
+        text:text,
+        urgent:true
+
+    }));
+
+
+    input.value = "";
 
 }
 

@@ -115,6 +115,7 @@ wss.on("connection", (ws) => {
                 id:user.id,
                 name:user.name,
                 text:data.text,
+                urgent:data.urgent,
                 time:new Date().toLocaleTimeString("ja-JP", {
                     timeZone: "Asia/Tokyo",
                     hour: "2-digit",
