@@ -94,8 +94,6 @@ wss.on("connection", (ws) => {
 
         if(data.type === "typing"){
 
-        console.log("typing受信", user.name, data.typing);
-
             broadcast({
 
                 type:"typing",
@@ -117,7 +115,8 @@ wss.on("connection", (ws) => {
                 id:user.id,
                 name:user.name,
                 text:data.text,
-                time:new Date().toLocaleTimeString([], {
+                time:new Date().toLocaleTimeString("ja-JP", {
+                    timeZone: "Asia/Tokyo",
                     hour: "2-digit",
                     minute: "2-digit"
                 })

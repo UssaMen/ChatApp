@@ -167,9 +167,26 @@ button {
 }
 
 
-.input-area input {
+.input-area textarea {
 
     flex:1;
+
+    background:#333;
+    color:white;
+
+    border:1px solid #555;
+
+    padding:8px;
+
+    resize:none;
+
+    overflow-y:auto;
+
+    min-height:40px;
+
+    max-height:120px;
+
+    font-family:sans-serif;
 
 }
 
@@ -284,6 +301,7 @@ button {
 
 }
 
+
 </style>
 
 </head>
@@ -335,10 +353,9 @@ button {
 
         <div class="input-area">
 
-        <input id="input"
-            type="text"
+        <textarea id="input"
             onkeydown="enterSend(event)"
-            oninput="typing()">
+            oninput="typing(); autoResize(this)"></textarea>
 
             <button onclick="sendMessage()">
                 送信
@@ -546,13 +563,30 @@ function sendMessage(){
 
     }));
     document.getElementById("input").value="";
+
+    document.getElementById("input").style.height="40px";
 }
 
-function enterSend(event) {
+function enterSend(event){
 
-    if(event.key === "Enter") {
-        sendMessage();
+
+    // Shift + Enter は改行
+    if(event.shiftKey && event.key === "Enter"){
+
+        return;
+
     }
+
+
+    // Enter は送信
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
 }
 
 document.addEventListener("keydown", function(event){
@@ -674,6 +708,16 @@ function typing(){
         }));
 
     },1000);
+
+}
+
+function autoResize(element){
+
+    element.style.height = "auto";
+
+
+    element.style.height =
+        element.scrollHeight + "px";
 
 }
 
