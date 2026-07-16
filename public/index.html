@@ -746,11 +746,13 @@ function autoResize(element){
 
 function sendUrgent(){
 
+        console.log("緊急ボタン押された");
+        
     const input =
         document.getElementById("input");
 
 
-    const text = input.value;
+    let text = input.value;
 
 
     if(text === ""){
