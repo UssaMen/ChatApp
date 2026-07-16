@@ -94,6 +94,8 @@ wss.on("connection", (ws) => {
 
         if(data.type === "typing"){
 
+        console.log("typing受信", user.name, data.typing);
+
             broadcast({
 
                 type:"typing",
