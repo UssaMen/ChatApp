@@ -346,6 +346,8 @@ ws.onmessage = function(event){
 
     if(data.type === "typing"){
 
+console.log("typing受信しました", data);
+
         const typing =
             document.getElementById("typing");
 
