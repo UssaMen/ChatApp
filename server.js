@@ -109,20 +109,21 @@ wss.on("connection", (ws) => {
 
         if(data.type === "message"){
 
-            const messageData = {
+        const messageData = {
 
-                type:"message",
-                id:user.id,
-                name:user.name,
-                text:data.text,
-                urgent:data.urgent,
-                time:new Date().toLocaleTimeString("ja-JP", {
-                    timeZone: "Asia/Tokyo",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                })
+            type:"message",
+            id:user.id,
+            name:user.name,
+            text:data.text,
+            urgent:data.urgent,
 
-            };
+            time:new Date().toLocaleTimeString("ja-JP", {
+                timeZone:"Asia/Tokyo",
+                hour:"2-digit",
+                minute:"2-digit"
+            })
+
+        };
 
 
             // 履歴へ保存
