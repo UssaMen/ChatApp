@@ -131,7 +131,6 @@ button {
     background:#2d2d30;
     border:1px solid #3c3c3c;
     min-width:80px;
-    white-space: pre-wrap;
 }
 
 .layout {
@@ -512,7 +511,7 @@ if(data.type === "image"){
             </div>
             <div class="balloon ${color}">
 
-                ${formatMessage(data.text)}
+                ${data.text.replace(/\n/g, "<br>")}
 
                 <div class="time">
                     ${data.time || ""}
@@ -717,15 +716,6 @@ function autoResize(element){
 
     element.style.height =
         element.scrollHeight + "px";
-
-}
-
-function formatMessage(text){
-
-    return text
-        .replace(/\r\n/g, "\n")
-        .replace(/^[ \t]+/gm, "")
-        .trim();
 
 }
 
