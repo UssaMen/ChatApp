@@ -342,6 +342,8 @@ ws.onopen = function(){
 
 ws.onmessage = function(event){
 
+    const data = JSON.parse(event.data);
+
     if(data.type === "typing"){
 
         const typing =
@@ -362,8 +364,6 @@ ws.onmessage = function(event){
         return; 
 
     }
-
-    const data = JSON.parse(event.data);
 
     if(data.type === "id"){
 
