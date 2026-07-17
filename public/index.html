@@ -13,21 +13,14 @@ body {
 }
 
 #messages {
-
     flex: 1;
-
     width: auto;
     height: 0;
-
     border: 1px solid #333;
     padding: 15px;
-
     overflow-y: auto;
-
     background:#1e1e1e;
-
 }
-
 
 /* メッセージ全体 */
 .message {
@@ -35,18 +28,15 @@ body {
     display:flex;
 }
 
-
 /* 左側（相手） */
 .left {
     justify-content: flex-start;
 }
 
-
 /* 右側（自分） */
 .right {
     justify-content: flex-end;
 }
-
 
 /* 名前 */
 .name {
@@ -78,37 +68,26 @@ body {
 }
 
 #users {
-
     width:220px;
     flex-shrink:0;
-
     background:#222;
     padding:10px;
-
     transition:0.3s;
     overflow:hidden;
-
 }
 
 
 #users.collapsed {
-
     width:50px;
     padding:0;
-
 }
 
 #users.collapsed .users-icon {
-
     display:block;
-
 }
 
-
 #users.collapsed #user-list {
-
     display:none;
-
 }
 
 input {
@@ -134,82 +113,54 @@ button {
 }
 
 .layout {
-
     display:flex;
     height:80vh;
-
 }
 
 .chat-area {
-
     flex:1;
-
     display:flex;
-
     flex-direction:column;
-
     min-height:0;
-
 }
 
 .input-area {
-
     display:flex;
-
     background:#252526;
-
     padding:10px;
-
     flex-shrink:0;
-
 }
 
 
 .input-area textarea {
-
     flex:1;
-
     background:#333;
     color:white;
-
     border:1px solid #555;
-
     padding:4px 8px;
-
     resize:none;
-
     overflow-y:hidden;
-
     height:20px;
     min-height:20px;
     max-height:120px;
-
     line-height:20px;
-
     font-family:sans-serif;
-
 }
 
 .header {
-
     height:50px;
     background:#252526;
     border-bottom:1px solid #3c3c3c;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     padding:0 20px;
-
 }
 
 .title {
-
     font-size:18px;
     font-weight:bold;
     color:#ffffff;
-
 }
 
 .status {
@@ -218,127 +169,85 @@ button {
 }
 
 .user-input {
-
     background:#1e1e1e;
     padding:10px 20px;
     border-bottom:1px solid #333;
 }
 
 .users-icon {
-
     display:none;
-
     text-align:center;
-
     font-size:22px;
-
     padding:10px;
-
 }
 
 .time {
-
     font-size:11px;
     color:#999;
     text-align:right;
     margin-top:2px;
-
 }
 
 .chat-image {
-
     max-width:250px;
     border-radius:8px;
     cursor:pointer;
-
     transition:0.2s;
-
 }
 
 .chat-image.zoom {
-
     max-width:800px;
     position:relative;
-
 }
 
 #typing {
-
     height:20px;
     color:#9cdcfe;
     font-size:13px;
     padding-left:15px;
     font-style:italic;
-
 }
 
 .typing-dots::after {
-
     content:"";
-
     animation:dots 1.5s infinite;
-
 }
 
 .urgent {
-
     background:#8b0000;
-
     color:white;
-
     border:2px solid red;
-
     font-weight:bold;
-
 }
 
 #pinned {
-
     background:#252526;
-
     border:1px solid #3c3c3c;
-
     padding:10px;
-
     margin-bottom:5px;
-
     color:#00e1ff;
 }
 
 .pinned-item {
-
     margin-top:5px;
-
     color:white;
-
 }
 
 .pin-button {
-
     padding:2px 5px;
-
     font-size:12px;
-
     border-radius:4px;
-
     margin-left:5px;
-
     cursor:pointer;
-
 }
 
 .pinned-item button {
-
     font-size:11px;
-
     padding:2px 6px;
-
     margin-left:10px;
-
 }
 
 @keyframes dots {
-
     0% {
         content:"";
     }
@@ -356,7 +265,6 @@ button {
     }
 
 }
-
 
 </style>
 
@@ -381,52 +289,35 @@ button {
 </header>
 
 <div class="user-input">
-
     名前：
     <input id="name" type="text" autocomplete="off">
-
 </div>
 
 <div class="layout">
-
     <div id="users">
-
         <div class="users-icon">
             👥
         </div>
-
         <div id="user-list">
         </div>
-
     </div>
-
-
     <div class="chat-area">
-        
         <div id="pinned"></div>
-
         <div id="messages"></div>
-
         <div id="typing"></div>
-
         <div class="input-area">
-
         <textarea id="input"
             onkeydown="enterSend(event)"
-            oninput="typing(); autoResize(this);"></textarea>
-
-            <button onclick="sendUrgent()">
-                🚨緊急
-            </button>
-
-            <button onclick="sendMessage()">
-                送信
-            </button>
-
+            oninput="typing(); autoResize(this);">
+        </textarea>
+        <button onclick="sendUrgent()">
+            🚨
+        </button>
+        <button onclick="sendMessage()">
+            送信
+        </button>
         </div>
-
     </div>
-
 </div>
 
 <button class="tool-button" button onclick="openGoogle()">
@@ -435,173 +326,133 @@ button {
 
 <script>
 
- if(Notification.permission !== "granted"){
-
+if (Notification.permission !== "granted")
+{
     Notification.requestPermission();
-
 }
 
-const ws = new WebSocket(
-    location.origin.replace("http", "ws")
-);
+const ws = new WebSocket(location.origin.replace("http", "ws"));
 
 let myName = "";
 let myId = "";
 
-ws.onopen = function(){
-    myName =
-        document.getElementById("name").value;
+ws.onopen = function()
+{
+    myName = document.getElementById("name").value;
 };
 
-ws.onmessage = function(event){
-
+ws.onmessage = function(event)
+{
     const data = JSON.parse(event.data);
 
-    if(
-        data.type === "message" &&
+    if (data.type === "message" &&
         !data.history &&
         data.id !== myId &&
         document.hidden &&
-        Notification.permission === "granted"
-    ){
-
-        new Notification(
-            "TASK Workspace",
-            {
-                body:"💡"
-            }
-        );
-
+        Notification.permission === "granted")
+    {
+        new Notification("TASK Workspace",{body:"💡"});
     }
 
-    if(data.type === "typing"){
+    if(data.type === "read")
+    {
+        const target = document.getElementById("read-" + data.messageId);
 
-        const typing =
-            document.getElementById("typing");
-
-
-        if(data.id !== myId && data.typing){
-
-            typing.innerHTML =
-                data.name + " さんが入力中<span class='typing-dots'></span>";
-
-        }else{
-
-            typing.innerHTML = "";
-
+        if (target)
+        {
+            target.innerHTML ="既読";
         }
 
-
         return;
-
     }
 
-    if(data.type === "id"){
+    if (data.type === "typing"){
 
+        const typing = document.getElementById("typing");
+
+        if (data.id !== myId && data.typing)
+        {
+            typing.innerHTML = data.name + " さんが入力中<span class='typing-dots'></span>";
+        }
+        else
+        {
+            typing.innerHTML = "";
+        }
+
+        return;
+    }
+
+    if (data.type === "id")
+    {  
         myId = data.id;
-
         return;
-
     }
 
-    if(data.type === "pin"){
+    if (data.type === "pin")
+    {
 
-        const pinned =
-            document.getElementById("pinned");
-
-
-        pinned.innerHTML =
-            "📌<br>";
-
+        const pinned = document.getElementById("pinned");
+        pinned.innerHTML = "📌<br>";
 
         data.pinnedMessages.forEach((msg)=>{
 
             pinned.innerHTML += `
-
             <div class="pinned-item">
-
                 ${msg.name}: ${msg.text}
-
                 <button onclick="unpinMessage('${msg.id}')">
                     ×
                 </button×
-
             </div>
-
             `;
-
         });
 
+        return;
+    }
+
+    if (data.type === "users")
+    {
+        const userList = document.getElementById("user-list");
+        userList.innerHTML = data.users.map(user => "🟢 " + user).join("<br>");
 
         return;
-
     }
 
-    if(data.type === "users"){
+    if (data.type === "image")
+    {
 
-    const userList =
-        document.getElementById("user-list");
+        const messages = document.getElementById("messages");
+        let position = "left";
 
+        if (data.id === myId)
+        {
+            position = "right";
+        }
 
-    userList.innerHTML =
-        data.users.map(
-            user => "🟢 " + user
-        ).join("<br>");
+        messages.innerHTML += `
 
-
-    return;
-
-    }
-
-if(data.type === "image"){
-
-
-    const messages =
-        document.getElementById("messages");
-
-
-    let position = "left";
-
-    if(data.id === myId){
-
-        position = "right";
-
-    }
-
-
-    messages.innerHTML += `
-
-    <div class="message ${position}">
-
-        <div>
-
-            <div class="name">
-                🖼️ ${data.name}
+        <div class="message ${position}">
+            <div>
+                <div class="name">
+                    🖼️ ${data.name}
+                </div>
+                <img 
+                    src="${data.image}"
+                    class="chat-image"
+                    onclick="zoomImage(this)"
+                >
             </div>
-
-            <img 
-                src="${data.image}"
-                class="chat-image"
-                onclick="zoomImage(this)"
-            >
-
         </div>
+        `;
 
-    </div>
+        scrollToBottom();
 
-    `;
+        return;
+    }
 
-    scrollToBottom();
-
-    return;
-
-}
-
-    const messages =
-        document.getElementById("messages");
+    const messages = document.getElementById("messages");
 
     // 入退室メッセージ
-    if(data.type === "system"){
+    if (data.type === "system"){
         messages.innerHTML += `
         <div style="
             text-align:center;
@@ -620,13 +471,13 @@ if(data.type === "image"){
     let color = "other";
     let urgentClass = "";
 
-    if(data.urgent){
-
+    if (data.urgent)
+    {
         urgentClass = "urgent";
-
     }
 
-    if(data.id === myId){
+    if (data.id === myId)
+    {
         position = "right";
         color = "mine";
     }
@@ -643,6 +494,7 @@ if(data.type === "image"){
 
                 <div class="time">
                     ${data.time || ""}
+                    <span id="read-${data.messageId}"></span>
                 </div>
 
                 <button class="pin-button"  onclick="pinMessage(\`${data.text}\`)">
@@ -654,261 +506,201 @@ if(data.type === "image"){
     </div>
     `;
 
+    // 既読処理
+    if(data.id !== myId)
+    {
+        ws.send(JSON.stringify({
+            type:"read",
+            messageId:data.messageId
+        }));
+    }
+
     // 追加：一番下へ移動
     scrollToBottom();
 };
 
-function sendMessage(){
+function sendMessage()
+{
+    const name = document.getElementById("name").value;
+    const input = document.getElementById("input").value;
 
-    const name =
-        document.getElementById("name").value;
-
-    const input =
-        document.getElementById("input").value;
-
-    if(name === ""){
+    if (name === "")
+    {
         alert("名前を入力してください");
         return;
     }
 
     // 初回だけ入室通知
-    if(myName === ""){
-
+    if (myName === "")
+    {
         myName = name;
-
         ws.send(JSON.stringify({
             type:"join",
             name:name
         }));
     }
 
-    if(input === ""){
+    if (input === "")
+    {
         return;
     }
 
     ws.send(JSON.stringify({
-
         type:"message",
         text:input.trim()
-
     }));
-    document.getElementById("input").value="";
 
+    document.getElementById("input").value="";
     document.getElementById("input").style.height="20px";
 }
 
-function enterSend(event){
-
+function enterSend(event)
+{
 
     // Shift + Enter は改行
-    if(event.shiftKey && event.key === "Enter"){
-
+    if (event.shiftKey && event.key === "Enter")
+    {
         return;
-
     }
-
 
     // Enter は送信
-    if(event.key === "Enter"){
-
+    if (event.key === "Enter")
+    {
         event.preventDefault();
-
         sendMessage();
-
     }
 
 }
 
-document.addEventListener("keydown", function(event){
-
-    if(event.key === "F2"){
-
+document.addEventListener("keydown", function(event)
+{
+    if (event.key === "F2")
+    {
         openGoogle();
-
     }
-
 });
 
-function openGoogle(){
-
+function openGoogle()
+{
     window.location.href = "https://www.google.com/";;
-
 }
 
-document.addEventListener("paste", function(event){
-
+document.addEventListener("paste", function(event)
+{
     const items = event.clipboardData.items;
-
 
     for(let i = 0; i < items.length; i++){
 
         const item = items[i];
 
-
-        if(item.type.indexOf("image") !== -1){
+        if (item.type.indexOf("image") !== -1){
 
             const file = item.getAsFile();
-
-
             const reader = new FileReader();
 
-
             reader.onload = function(){
-
                 ws.send(JSON.stringify({
-
                     type:"image",
                     image:reader.result
 
                 }));
-
             };
-
-
             reader.readAsDataURL(file);
-
         }
-
     }
-
 });
 
-function zoomImage(img){
-
-
-    if(img.classList.contains("zoom")){
-
-
+function zoomImage(img)
+{
+    if (img.classList.contains("zoom"))
+    {
         img.classList.remove("zoom");
-
-
-    }else{
-
-
-        img.classList.add("zoom");
-
-
     }
-
-
+    else
+    {
+        img.classList.add("zoom");
+    }
 }
 
-function scrollToBottom(){
-
-    const messages =
-        document.getElementById("messages");
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
+function scrollToBottom()
+{
+    const messages = document.getElementById("messages");
+    messages.scrollTop = messages.scrollHeight;
 }
 
-function toggleUsers(){
-
-    const users =
-        document.getElementById("users");
-
-
+function toggleUsers()
+{
+    const users = document.getElementById("users");
     users.classList.toggle("collapsed");
-
 }
 
 let typingTimer;
 
-function typing(){
+function typing()
+{
 
     ws.send(JSON.stringify({
-
         type:"typing",
         typing:true
-
     }));
-
 
     clearTimeout(typingTimer);
 
-
     typingTimer = setTimeout(()=>{
-
         ws.send(JSON.stringify({
-
             type:"typing",
             typing:false
-
         }));
-
     },1000);
-
 }
 
-function autoResize(element){
-
+function autoResize(element)
+{
     element.style.height = "20px";
-
-    element.style.height =
-        element.scrollHeight + "px";
-
+    element.style.height = element.scrollHeight + "px";
 }
 
-function sendUrgent(){
-
-        console.log("緊急ボタン押された");
-
-    const input =
-        document.getElementById("input");
-
-
+function sendUrgent()
+{
+    const input = document.getElementById("input");
     let text = input.value;
 
-
-    if(text === ""){
+    if (text === "")
+    {
         return;
     }
 
-    if(!text.startsWith("🚨")){
-
+    if (!text.startsWith("🚨"))
+    {
         text = "🚨!!緊急!!🚨\n" + text;
-
     }
-
 
     ws.send(JSON.stringify({
 
         type:"message",
         text:text,
         urgent:true
-
     }));
-
 
     input.value = "";
-
 }
 
-function pinMessage(text){
-
+function pinMessage(text)
+{
     ws.send(JSON.stringify({
-
         type:"pin",
         text:text
-
     }));
-
 }
 
-function unpinMessage(id){
-
+function unpinMessage(id)
+{
     ws.send(JSON.stringify({
-
         type:"unpin",
         id:id
-
     }));
-
 }
 
 </script>
-
 </body>
-
 </html>
