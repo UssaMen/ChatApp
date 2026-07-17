@@ -17,6 +17,7 @@ const wss = new WebSocket.Server({
 // 接続中ユーザー
 let users = new Map();
 let messages = [];
+let pinnedMessages = [];
 
 wss.on("connection", (ws) => {
 
@@ -62,16 +63,16 @@ wss.on("connection", (ws) => {
 
             });
 
-messages.forEach((msg)=>{
+            messages.forEach((msg)=>{
 
-    ws.send(JSON.stringify({
+                ws.send(JSON.stringify({
 
-        ...msg,
-        history:true
+                    ...msg,
+                    history:true
 
-    }));
+                }));
 
-});
+            });
 
 
             sendUserList();
@@ -107,6 +108,28 @@ messages.forEach((msg)=>{
                 typing:data.typing
 
             });
+
+            return;
+
+        }
+
+        if(data.type === "pin"){
+
+            pinnedMessages.push({
+
+                text:data.text,
+                name:user.name
+
+            });
+
+
+            broadcast({
+
+                type:"pin",
+                pinnedMessages:pinnedMessages
+
+            });
+
 
             return;
 

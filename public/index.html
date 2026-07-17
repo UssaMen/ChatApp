@@ -494,6 +494,33 @@ ws.onmessage = function(event){
 
     }
 
+    if(data.type === "pin"){
+
+        const pinned =
+            document.getElementById("pinned");
+
+
+        pinned.innerHTML =
+            "📌 固定メッセージ<br>";
+
+
+        data.pinnedMessages.forEach((msg)=>{
+
+            pinned.innerHTML += `
+
+            <div class="pinned-item">
+                📌 ${msg.name}: ${msg.text}
+            </div>
+
+            `;
+
+        });
+
+
+        return;
+
+    }
+
     if(data.type === "users"){
 
     const userList =
@@ -508,7 +535,7 @@ ws.onmessage = function(event){
 
     return;
 
-}
+    }
 
 if(data.type === "image"){
 
@@ -844,17 +871,12 @@ function sendUrgent(){
 
 function pinMessage(text){
 
-    const pinned =
-        document.getElementById("pinned");
+    ws.send(JSON.stringify({
 
+        type:"pin",
+        text:text
 
-    pinned.innerHTML += `
-
-    <div class="pinned-item">
-        📌 ${text}
-    </div>
-
-    `;
+    }));
 
 }
 
