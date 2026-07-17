@@ -415,14 +415,9 @@ ws.onmessage = function(event){
         data.type === "message" &&
         !data.history &&
         data.id !== myId &&
+        document.hidden &&
         Notification.permission === "granted"
     ){
-
-        console.log(
-            "通知判定",
-            data.text,
-            data.history
-        );
 
         new Notification(
             "TASK Workspace",
