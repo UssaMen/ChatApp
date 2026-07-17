@@ -303,11 +303,15 @@ button {
     margin-bottom:5px;
 
     color:#00e1ff;
-
-    font-weight:bold;
-
 }
 
+.pinned-item {
+
+    margin-top:5px;
+
+    color:white;
+
+}
 
 @keyframes dots {
 
@@ -375,7 +379,7 @@ button {
 
     <div class="chat-area">
         
-        <div id="pinned">📌 130931</div>
+        <div id="pinned">📌</div>
 
         <div id="messages"></div>
 
@@ -583,6 +587,10 @@ if(data.type === "image"){
                 <div class="time">
                     ${data.time || ""}
                 </div>
+
+                <button onclick="pinMessage(\`${data.text}\`)">
+                    📌
+                </button>   
 
             </div>
         </div>
@@ -817,6 +825,22 @@ function sendUrgent(){
 
 
     input.value = "";
+
+}
+
+function pinMessage(text){
+
+    const pinned =
+        document.getElementById("pinned");
+
+
+    pinned.innerHTML += `
+
+    <div class="pinned-item">
+        📌 ${text}
+    </div>
+
+    `;
 
 }
 
