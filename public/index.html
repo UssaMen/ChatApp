@@ -501,7 +501,7 @@ ws.onmessage = function(event){
 
 
         pinned.innerHTML =
-            "📌 固定メッセージ<br>";
+            "📌<br>";
 
 
         data.pinnedMessages.forEach((msg)=>{
@@ -509,7 +509,7 @@ ws.onmessage = function(event){
             pinned.innerHTML += `
 
             <div class="pinned-item">
-                📌 ${msg.name}: ${msg.text}
+                ${msg.name}: ${msg.text}
             </div>
 
             `;
