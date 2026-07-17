@@ -389,6 +389,12 @@ button {
 
 <script>
 
+ if(Notification.permission !== "granted"){
+
+    Notification.requestPermission();
+
+}
+
 const ws = new WebSocket(
     location.origin.replace("http", "ws")
 );
@@ -404,6 +410,18 @@ ws.onopen = function(){
 ws.onmessage = function(event){
 
     const data = JSON.parse(event.data);
+    
+    if(data.type === "message" &&
+        data.id !== myId &&
+        Notification.permission === "granted")
+        {
+            new Notification(
+                "TASK Workspace",
+                {
+                    body:"新しいメッセージがあります"
+                }
+            );
+        }   
 
     if(data.type === "typing"){
 
