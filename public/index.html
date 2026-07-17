@@ -366,8 +366,8 @@ ws.onmessage = function(event)
         return;
     }
 
-    if (data.type === "typing"){
-
+    if (data.type === "typing")
+    {
         const typing = document.getElementById("typing");
 
         if (data.id !== myId && data.typing)
@@ -452,7 +452,8 @@ ws.onmessage = function(event)
     const messages = document.getElementById("messages");
 
     // 入退室メッセージ
-    if (data.type === "system"){
+    if (data.type === "system")
+    {
         messages.innerHTML += `
         <div style="
             text-align:center;
@@ -589,8 +590,8 @@ document.addEventListener("paste", function(event)
 {
     const items = event.clipboardData.items;
 
-    for(let i = 0; i < items.length; i++){
-
+    for (let i = 0; i < items.length; i++)
+    {
         const item = items[i];
 
         if (item.type.indexOf("image") !== -1){
@@ -602,7 +603,6 @@ document.addEventListener("paste", function(event)
                 ws.send(JSON.stringify({
                     type:"image",
                     image:reader.result
-
                 }));
             };
             reader.readAsDataURL(file);
@@ -638,7 +638,6 @@ let typingTimer;
 
 function typing()
 {
-
     ws.send(JSON.stringify({
         type:"typing",
         typing:true
