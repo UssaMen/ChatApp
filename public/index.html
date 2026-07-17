@@ -410,18 +410,22 @@ ws.onopen = function(){
 ws.onmessage = function(event){
 
     const data = JSON.parse(event.data);
-    
-    if(data.type === "message" &&
+
+    if(
+        data.type === "message" &&
+        !data.history &&
         data.id !== myId &&
-        Notification.permission === "granted")
-        {
-            new Notification(
-                "TASK Workspace",
-                {
-                    body:"新しいメッセージがあります"
-                }
-            );
-        }   
+        Notification.permission === "granted"
+    ){
+
+        new Notification(
+            "TASK Workspace",
+            {
+                body:"新しいメッセージがあります"
+            }
+        );
+
+    }
 
     if(data.type === "typing"){
 
