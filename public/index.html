@@ -313,6 +313,20 @@ button {
 
 }
 
+.pin-button {
+
+    padding:2px 5px;
+
+    font-size:12px;
+
+    border-radius:4px;
+
+    margin-left:5px;
+
+    cursor:pointer;
+
+}
+
 @keyframes dots {
 
     0% {
@@ -379,7 +393,7 @@ button {
 
     <div class="chat-area">
         
-        <div id="pinned">📌</div>
+        <div id="pinned"></div>
 
         <div id="messages"></div>
 
@@ -588,7 +602,7 @@ if(data.type === "image"){
                     ${data.time || ""}
                 </div>
 
-                <button onclick="pinMessage(\`${data.text}\`)">
+                <button class="pin-button"  onclick="pinMessage(\`${data.text}\`)">
                     📌
                 </button>   
 
