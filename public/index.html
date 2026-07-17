@@ -327,6 +327,16 @@ button {
 
 }
 
+.pinned-item button {
+
+    font-size:11px;
+
+    padding:2px 6px;
+
+    margin-left:10px;
+
+}
+
 @keyframes dots {
 
     0% {
@@ -509,7 +519,13 @@ ws.onmessage = function(event){
             pinned.innerHTML += `
 
             <div class="pinned-item">
+
                 ${msg.name}: ${msg.text}
+
+                <button onclick="unpinMessage('${msg.id}')">
+                    ×
+                </button×
+
             </div>
 
             `;
@@ -875,6 +891,17 @@ function pinMessage(text){
 
         type:"pin",
         text:text
+
+    }));
+
+}
+
+function unpinMessage(id){
+
+    ws.send(JSON.stringify({
+
+        type:"unpin",
+        id:id
 
     }));
 

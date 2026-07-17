@@ -117,6 +117,8 @@ wss.on("connection", (ws) => {
 
             pinnedMessages.push({
 
+                id: crypto.randomUUID(),
+
                 text:data.text,
                 name:user.name
 
@@ -250,6 +252,26 @@ function sendUserList(){
         users:list
 
     });
+
+}
+
+if(data.type === "unpin"){
+
+    pinnedMessages =
+        pinnedMessages.filter(
+            msg => msg.id !== data.id
+        );
+
+
+    broadcast({
+
+        type:"pin",
+        pinnedMessages:pinnedMessages
+
+    });
+
+
+    return;
 
 }
 
