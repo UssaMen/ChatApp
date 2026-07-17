@@ -137,6 +137,26 @@ wss.on("connection", (ws) => {
 
         }
 
+        if(data.type === "unpin"){
+
+            pinnedMessages =
+                pinnedMessages.filter(
+                    msg => msg.id !== data.id
+                );
+
+
+            broadcast({
+
+                type:"pin",
+                pinnedMessages:pinnedMessages
+
+            });
+
+
+            return;
+
+        }
+
         if(data.type === "message"){
 
         const messageData = {
@@ -255,25 +275,6 @@ function sendUserList(){
 
 }
 
-if(data.type === "unpin"){
-
-    pinnedMessages =
-        pinnedMessages.filter(
-            msg => msg.id !== data.id
-        );
-
-
-    broadcast({
-
-        type:"pin",
-        pinnedMessages:pinnedMessages
-
-    });
-
-
-    return;
-
-}
 
 
 
