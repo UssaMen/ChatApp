@@ -418,6 +418,12 @@ ws.onmessage = function(event){
         Notification.permission === "granted"
     ){
 
+        console.log(
+            "通知判定",
+            data.text,
+            data.history
+        );
+
         new Notification(
             "TASK Workspace",
             {
