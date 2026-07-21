@@ -293,6 +293,8 @@ button {
     <input id="name" type="text" autocomplete="off">
     部屋：
     <select id="room"></select>
+    入室
+    <button onclick="joinRoom()"></button>
 </div>
 
 <div class="layout">
@@ -557,45 +559,37 @@ ws.onmessage = function(event)
     scrollToBottom();
 };
 
-function sendMessage()
-{
+function sendMessage(){
 
-    const name = document.getElementById("name").value;
-    const input = document.getElementById("input").value;
+    if(myName === ""){
 
-    if (name === "")
-    {
-        alert("名前を入力してください");
+        alert("先に入室してください");
+
+        return;
+
+    }
+
+    const input =
+        document.getElementById("input").value;
+
+
+    if(input === ""){
         return;
     }
 
-    // 初回だけ入室通知
-    if (myName === "")
-    {
-        myName = name;
-        const room = document.getElementById("room").value;
-
-        ws.send(JSON.stringify({
-
-            type:"join",
-            name:name,
-            room:room
-
-        }));
-    }
-
-    if (input === "")
-    {
-        return;
-    }
 
     ws.send(JSON.stringify({
+
         type:"message",
         text:input.trim()
+
     }));
 
+
     document.getElementById("input").value="";
+
     document.getElementById("input").style.height="20px";
+
 }
 
 function enterSend(event)
@@ -741,6 +735,43 @@ function unpinMessage(id)
         type:"unpin",
         id:id
     }));
+}
+
+function joinRoom(){
+
+    const name =
+        document.getElementById("name").value;
+
+
+    const room =
+        document.getElementById("room").value;
+
+
+    if(name === ""){
+
+        alert("名前を入力してください");
+
+        return;
+
+    }
+
+
+    myName = name;
+
+
+    ws.send(JSON.stringify({
+
+        type:"join",
+
+        name:name,
+
+        room:room
+
+    }));
+
+    document.getElementById("name").disabled=true;
+    document.getElementById("room").disabled=true;
+
 }
 
 </script>
