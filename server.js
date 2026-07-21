@@ -89,16 +89,27 @@ wss.on("connection", (ws) => {
         user.role = accounts[data.name].role;
         user.room = data.room;
 
-        broadcast({
+        broadcastRoom(
+            user.room,
+            {
                 type:"system",
                 message:user.name + " さんが入室しました"
-            });
+            }
+        );
 
             messages.forEach((msg)=>{
-                ws.send(JSON.stringify({
-                    ...msg,
-                    history:true
-                }));
+
+                if(msg.room === user.room){
+
+                    ws.send(JSON.stringify({
+
+                        ...msg,
+                        history:true
+
+                    }));
+
+                }
+
             });
 
             sendUserList();
@@ -108,12 +119,15 @@ wss.on("connection", (ws) => {
 
         if (data.type === "image")
         {
-            broadcast({
-                type:"image",
-                id:user.id,
-                name:user.name,
-                image:data.image
-            });
+            broadcastRoom(
+                user.room,
+                {
+                    type:"image",
+                    id:user.id,
+                    name:user.name,
+                    image:data.image
+                }
+            );
 
             return;
         }
@@ -121,23 +135,29 @@ wss.on("connection", (ws) => {
         if (data.type === "typing")
         {
 
-            broadcast({
-                type:"typing",
-                id:user.id,
-                name:user.name,
-                typing:data.typing
-            });
+            broadcastRoom(
+                user.room,
+                {
+                    type:"typing",
+                    id:user.id,
+                    name:user.name,
+                    typing:data.typing
+                }
+            );
 
             return;
         }
 
         if (data.type === "read")
         {
-            broadcast({
-                type:"read",
-                messageId:data.messageId,
-                user:user.name
-            });
+            broadcastRoom(
+                user.room,
+                {
+                    type:"read",
+                    messageId:data.messageId,
+                    user:user.name
+                }
+            );
 
             return;
         }
@@ -150,10 +170,13 @@ wss.on("connection", (ws) => {
                 name:user.name
             });
 
-            broadcast({
-                type:"pin",
-                pinnedMessages:pinnedMessages
-            });
+            broadcastRoom(
+                user.room,
+                {
+                    type:"pin",
+                    pinnedMessages:pinnedMessages
+                }
+            );
 
             return;
         }
@@ -162,10 +185,13 @@ wss.on("connection", (ws) => {
         {
             pinnedMessages = pinnedMessages.filter(msg => msg.id !== data.id);
 
-            broadcast({
-                type:"pin",
-                pinnedMessages:pinnedMessages
-            });
+            broadcastRoom(
+                user.room,
+                {
+                    type:"pin",
+                    pinnedMessages:pinnedMessages
+                }
+            );
 
             return;
         }
@@ -176,6 +202,7 @@ wss.on("connection", (ws) => {
 
                 type:"message",
                 messageId: crypto.randomUUID(),
+                room:user.room,
                 id:user.id,
                 name:user.name,
                 text:data.text,
@@ -210,10 +237,13 @@ wss.on("connection", (ws) => {
 
         if (user && user.name)
         {
-            broadcast({
-                type:"system",
-                message:user.name + " さんが退出しました"
-            });
+            broadcastRoom(
+                user.room,
+                {
+                    type:"system",
+                    message:user.name + " さんが退出しました"
+                }
+            );
         }
 
         users.delete(ws);
@@ -238,18 +268,28 @@ function sendUserList()
     const list = [];
 
     users.forEach((user)=>{
-        if (user.name)
+        if(user.name)
         {
-
             list.push(user.name);
-
         }
     });
 
-    broadcast({
-        type:"users",
-        users:list
+
+    users.forEach((user, client)=>{
+
+        if(user.room){
+
+            client.send(JSON.stringify({
+
+                type:"users",
+                users:list
+
+            }));
+
+        }
+
     });
+
 }
 
 server.listen(process.env.PORT || 3000, () => {

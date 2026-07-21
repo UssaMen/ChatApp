@@ -575,12 +575,6 @@ function sendMessage()
         myName = name;
         const room = document.getElementById("room").value;
 
-        console.log("join送信", {
-    name:name,
-    room:room
-});
-
-
         ws.send(JSON.stringify({
 
             type:"join",
