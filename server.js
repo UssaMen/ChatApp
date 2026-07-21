@@ -16,14 +16,32 @@ let users = new Map();
 let messages = [];
 let pinnedMessages = [];
 
+//ユーザー追加
+const accounts = {
+
+    "TSUJIMURA":{
+        role:"admin"
+    },
+
+    "INO":{
+        role:"user"
+    },
+
+    "GARASHINKI":{
+        role:"user"
+    }
+
+};
+
 wss.on("connection", (ws) => {
 
     // 接続ごとにID発行
     const id = crypto.randomUUID();
 
     users.set(ws, {
-        id: id,
-        name: ""
+        id:id,
+        name:"",
+        role:""
     });
 
     ws.send(JSON.stringify({
@@ -37,10 +55,26 @@ wss.on("connection", (ws) => {
         const user = users.get(ws);
 
         // 入室
-        if (data.type === "join")
-        {
-            user.name = data.name;
-            broadcast({
+    if(data.type === "join"){
+
+
+        if(!accounts[data.name]){
+
+            ws.send(JSON.stringify({
+
+                type:"error",
+                message:"登録されていないユーザーです"
+
+            }));
+
+            return;
+
+        }
+
+        user.name = data.name;
+        user.role = accounts[data.name].role;
+
+        broadcast({
                 type:"system",
                 message:user.name + " さんが入室しました"
             });
