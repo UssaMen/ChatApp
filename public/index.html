@@ -291,6 +291,8 @@ button {
 <div class="user-input">
     名前：
     <input id="name" type="text" autocomplete="off">
+    部屋：
+    <select id="room"></select>
 </div>
 
 <div class="layout">
@@ -325,6 +327,60 @@ button {
 </button>
 
 <script>
+
+const rooms = [
+    "room1",
+    "room2",
+    "room3"
+];
+
+function setupRooms(){
+
+    const select =
+        document.getElementById("room");
+
+
+    roomList.forEach(room=>{
+
+        const option =
+            document.createElement("option");
+
+
+        option.value = room;
+        option.text = room;
+
+
+        select.appendChild(option);
+
+    });
+
+}
+
+window.onload = function(){
+
+    setupRooms();
+
+    const select =
+        document.getElementById("room");
+
+
+    rooms.forEach(room=>{
+
+        const option =
+            document.createElement("option");
+
+
+        option.value = room;
+
+        option.text =
+            room;
+
+
+        select.appendChild(option);
+
+    });
+
+};
 
 if (Notification.permission !== "granted")
 {
@@ -540,9 +596,14 @@ function sendMessage()
     if (myName === "")
     {
         myName = name;
+        const room = document.getElementById("room").value;
+
         ws.send(JSON.stringify({
+
             type:"join",
-            name:name
+            name:name,
+            room:room
+
         }));
     }
 

@@ -20,15 +20,18 @@ let pinnedMessages = [];
 const accounts = {
 
     "TSUJIMURA":{
-        role:"admin"
+        role:"admin",
+        rooms:["room1","room2","room3"]
     },
 
     "INO":{
-        role:"user"
+        role:"user",
+        rooms:["room1"]
     },
 
     "GARASHINKI":{
-        role:"user"
+        role:"user",
+        rooms:["room2"]
     }
 
 };
@@ -41,7 +44,8 @@ wss.on("connection", (ws) => {
     users.set(ws, {
         id:id,
         name:"",
-        role:""
+        role:"",
+        room:""
     });
 
     ws.send(JSON.stringify({
@@ -66,13 +70,24 @@ wss.on("connection", (ws) => {
                 message:"登録されていないユーザーです"
 
             }));
-
             return;
+        }
 
+        if (!accounts[data.name].rooms.includes(data.room))
+        {
+
+            ws.send(JSON.stringify({
+
+                type:"error",
+                message:"この部屋には入室できません"
+
+            }));
+            return;
         }
 
         user.name = data.name;
         user.role = accounts[data.name].role;
+        user.room = data.room;
 
         broadcast({
                 type:"system",
@@ -182,8 +197,8 @@ wss.on("connection", (ws) => {
             {
                 messages.shift();
             }
-
-            broadcast(messageData);
+            
+            broadcastRoom(user.room, messageData);
         }
     });
 
@@ -208,10 +223,12 @@ wss.on("connection", (ws) => {
 });
 
 // 全員へ送信
-function broadcast(data)
+function broadcastRoom(room, data)
 {
     users.forEach((user, client)=>{
-        client.send(JSON.stringify(data));
+        if(user.room === room){
+            client.send(JSON.stringify(data));
+        }
     });
 }
 
