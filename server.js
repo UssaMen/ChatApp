@@ -29,7 +29,7 @@ const accounts = {
         rooms:["room1"]
     },
 
-    "GARASHINKI":{
+    "IGARASHI":{
         role:"user",
         rooms:["room2"]
     }
@@ -59,11 +59,10 @@ wss.on("connection", (ws) => {
         const user = users.get(ws);
 
         // 入室
-    if(data.type === "join"){
+    if (data.type === "join"){
 
-
-        if(!accounts[data.name]){
-
+        if (!accounts[data.name])
+        {
             ws.send(JSON.stringify({
 
                 type:"error",
