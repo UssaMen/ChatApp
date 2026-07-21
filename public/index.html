@@ -559,7 +559,6 @@ ws.onmessage = function(event)
 
 function sendMessage()
 {
-    console.log("送信開始");
 
     const name = document.getElementById("name").value;
     const input = document.getElementById("input").value;
@@ -575,6 +574,12 @@ function sendMessage()
     {
         myName = name;
         const room = document.getElementById("room").value;
+
+        console.log("join送信", {
+    name:name,
+    room:room
+});
+
 
         ws.send(JSON.stringify({
 
