@@ -339,46 +339,22 @@ function setupRooms(){
     const select =
         document.getElementById("room");
 
-
-    roomList.forEach(room=>{
-
-        const option =
-            document.createElement("option");
-
-
-        option.value = room;
-        option.text = room;
-
-
-        select.appendChild(option);
-
-    });
-
-}
-
-window.onload = function(){
-
-    setupRooms();
-
-    const select =
-        document.getElementById("room");
-
-
     rooms.forEach(room=>{
 
         const option =
             document.createElement("option");
 
-
         option.value = room;
-
-        option.text =
-            room;
-
+        option.text = room;
 
         select.appendChild(option);
 
     });
+}
+
+window.onload = function(){
+
+    setupRooms();
 
 };
 
