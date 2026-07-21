@@ -345,6 +345,11 @@ ws.onmessage = function(event)
 {
     const data = JSON.parse(event.data);
 
+    if (data.type === "error"){
+        alert(data.message);
+        return;
+    }
+
     if (data.type === "message" &&
         !data.history &&
         data.id !== myId &&
