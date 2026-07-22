@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>WhiteBoard</title>
+
+<style>
+
+body {
+    background:#222;
+    color:white;
+    font-family:sans-serif;
+}
+
+canvas {
+    background:white;
+    border:1px solid #555;
+}
+
+button {
+    margin-top:10px;
+    padding:8px 15px;
+}
+
+#status {
+
+    height:20px;
+
+    color:#9cdcfe;
+
+    font-size:13px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>
+🖊 WhiteBoard
+</h2>
+
+<div id="status">
+</div>
+
+<canvas id="board"
+        width="800"
+        height="500">
+</canvas>
+
+<br>
+
+<button onclick="clearBoard()">
+クリア
+</button>
+
+<button onclick="setEraser(true)">
+🧽
+</button>
+
+<button onclick="setEraser(false)">
+✏️
+</button>
+
+<button onclick="setColor('black')">
+⚫
+</button>
+
+<button onclick="setColor('red')">
+🔴
+</button>
+
+<button onclick="setColor('blue')">
+🔵
+</button>
+
+<button onclick="setColor('green')">
+🟢
+</button>
+
+<button onclick="setWidth(2)">
+細
+</button>
+
+<button onclick="setWidth(5)">
+中
+</button>
+
+<button onclick="setWidth(10)">
+太
+</button>
+
+<script>
+
+const ws = new WebSocket(
+    location.origin.replace("http","ws")
+);
+
+const canvas = document.getElementById("board");
+const ctx = canvas.getContext("2d");
+
+const params =
+    new URLSearchParams(
+        location.search
+    );
+
+const room =
+    params.get("room");
+
+let drawing = false;
+let currentColor = "black";
+let lineWidth = 3;
+let eraserMode = false;
+
+canvas.addEventListener(
+    "mouseup",
+    function(){
+
+        drawing = false;
+
+        ws.send(JSON.stringify({
+            type:"stop"
+        }));
+
+    }
+);
+
+canvas.addEventListener(
+    "mousemove",
+    function(e){
+
+        if(!drawing){
+
+            return;
+
+        }
+
+
+        if(eraserMode){
+
+            ctx.lineWidth = 20;
+
+        }else{
+
+            ctx.lineWidth = lineWidth;
+
+        }
+
+        ctx.lineCap = "round";
+
+        if(eraserMode){
+
+            ctx.globalCompositeOperation =
+                "destination-out";
+
+        }else{
+
+            ctx.globalCompositeOperation =
+                "source-over";
+
+            ctx.strokeStyle =
+                currentColor;
+
+        }
+
+        ctx.lineTo(
+            e.offsetX,
+            e.offsetY
+        );
+
+
+        ctx.stroke();
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            e.offsetX,
+            e.offsetY
+        );
+
+
+        ws.send(JSON.stringify({
+
+            type:"draw",
+
+            x:e.offsetX,
+
+            y:e.offsetY,
+
+            color:currentColor,
+
+            width:lineWidth,
+
+            eraser:eraserMode
+
+        }));
+
+    }
+);
+
+canvas.addEventListener(
+    "mousedown",
+    function(e){
+
+        drawing = true;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            e.offsetX,
+            e.offsetY
+        );
+
+
+        ws.send(JSON.stringify({
+
+            type:"start",
+
+            x:e.offsetX,
+
+            y:e.offsetY,
+
+            name:"ユーザー"
+
+        }));
+
+    }
+);
+
+function clearBoard(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ws.send(JSON.stringify({
+
+        type:"clear"
+
+    }));
+
+}
+
+ws.onmessage = function(event){
+
+    const data =
+        JSON.parse(event.data);
+
+    if(data.type === "clear"){
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        return;
+
+    }
+
+    if(data.type === "start"){
+
+    document.getElementById("status").innerHTML =
+        "🟢 " + data.name + " さんが描画中";
+
+        ctx.closePath();
+        
+        ctx.beginPath();
+
+        ctx.moveTo(
+            data.x,
+            data.y
+        );
+
+        return;
+    }
+
+    if(data.type === "draw"){
+
+        ctx.lineWidth = data.width;
+        ctx.lineCap = "round";
+
+        if(data.eraser){
+
+            ctx.globalCompositeOperation =
+                "destination-out";
+
+
+        }else{
+
+            ctx.globalCompositeOperation =
+                "source-over";
+
+            ctx.strokeStyle =
+                data.color;
+
+        }
+
+        ctx.lineTo(
+            data.x,
+            data.y
+        );
+
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            data.x,
+            data.y
+        );
+
+    }
+
+    if(data.type === "stop"){
+
+        document.getElementById("status").innerHTML="";
+
+        return;
+
+    }
+
+};
+
+function setColor(color){
+
+    currentColor = color;
+
+}
+
+function setWidth(width){
+
+    lineWidth = width;
+
+}
+
+
+function setEraser(mode){
+
+    eraserMode = mode;
+
+}
+
+</script>
+</body>
+</html>

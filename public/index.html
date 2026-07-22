@@ -297,6 +297,10 @@ select {
     ☰
     </button>
 
+    <button class="tool-button" onclick="openBoard()">
+    🖊 WhiteBoard
+    </button>
+
 </header>
 
 <div class="user-input">
@@ -782,6 +786,17 @@ function joinRoom(){
 
     document.getElementById("name").disabled=true;
     document.getElementById("room").disabled=true;
+
+}
+
+function openBoard(){
+
+    const room =
+        document.getElementById("room").value;
+
+
+    window.location.href =
+        "/board.html?room=" + room;
 
 }
 
