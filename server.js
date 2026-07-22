@@ -16,6 +16,7 @@ let users = new Map();
 let messages = [];
 let pinnedMessages = [];
 let boardHistory = [];
+let boardClients = [];
 
 //ユーザー追加
 const accounts = {
@@ -42,6 +43,8 @@ wss.on("connection", (ws) => {
     // 接続ごとにID発行
     const id = crypto.randomUUID();
 
+    boardClients.push(ws);
+
     users.set(ws, {
         id:id,
         name:"",
@@ -67,7 +70,7 @@ wss.on("connection", (ws) => {
             boardHistory.push(data);
 
 
-            broadcastRoom(
+            broadcastBoard(
                 data.room,
                 data
             );
@@ -96,6 +99,7 @@ wss.on("connection", (ws) => {
 
         if(data.type === "boardJoin"){
 
+            ws.boardRoom = data.room;
 
             boardHistory.forEach((item)=>{
 
@@ -315,6 +319,23 @@ function broadcastRoom(room, data)
             client.send(JSON.stringify(data));
         }
     });
+}
+
+function broadcastBoard(room, data){
+
+    boardClients.forEach((client)=>{
+
+        if(
+            client.readyState === WebSocket.OPEN &&
+            client.boardRoom === room
+        ){
+
+            client.send(JSON.stringify(data));
+
+        }
+
+    });
+
 }
 
 // オンライン一覧送信
