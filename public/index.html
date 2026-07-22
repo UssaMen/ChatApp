@@ -408,6 +408,28 @@ ws.onmessage = function(event)
         new Notification("TASK Workspace",{body:"💡"});
     }
 
+
+    if(data.type === "reaction")
+    {
+
+        const area =
+            document.getElementById(
+                "reaction-" + data.messageId
+            );
+
+        if(area)
+        {
+
+            area.innerHTML +=
+                data.emoji;
+
+        }
+        
+        return;
+
+    }
+
+
     if(data.type === "read")
     {
         const target = document.getElementById("read-" + data.messageId);
@@ -551,6 +573,22 @@ ws.onmessage = function(event)
                     ${data.time || ""}
                     <span id="read-${data.messageId}"></span>
                 </div>
+
+                <div class="reaction-area"
+                    id="reaction-${data.messageId}">
+                </div>
+
+                <button onclick="reaction('${data.messageId}','👍')">
+                    👍
+                </button>
+
+                <button onclick="reaction('${data.messageId}','❤️')">
+                    ❤️
+                </button>
+
+                <button onclick="reaction('${data.messageId}','😂')">
+                    😂
+                </button>
 
                 <button class="pin-button"  onclick="pinMessage(\`${data.text}\`)">
                     📌
@@ -800,6 +838,20 @@ function openBoardWindow(){
         "WhiteBoard",
         "width=900,height=700"
     );
+
+}
+
+function reaction(messageId, emoji){
+
+    ws.send(JSON.stringify({
+
+        type:"reaction",
+
+        messageId:messageId,
+
+        emoji:emoji
+
+    }));
 
 }
 

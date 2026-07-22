@@ -256,6 +256,21 @@ wss.on("connection", (ws) => {
             return;
         }
 
+        if (data.type === "reaction")
+        {
+
+            broadcastRoom(
+                user.room,
+                {
+                    type:"reaction",
+                    messageId:data.messageId,
+                    emoji:data.emoji
+                }
+            );
+
+            return;
+        }
+
         if (data.type === "message")
         {
             const messageData = {
