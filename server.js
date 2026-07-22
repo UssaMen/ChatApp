@@ -153,7 +153,8 @@ wss.on("connection", (ws) => {
         }
 
 
-        if (!accounts[data.name].rooms.includes(data.room))
+        if(data.room !== "ALL" &&
+            !accounts[data.name].rooms.includes(data.room))
         {
 
             ws.send(JSON.stringify({
@@ -162,6 +163,7 @@ wss.on("connection", (ws) => {
                 message:"この部屋には入室できません"
 
             }));
+
             return;
         }
 
