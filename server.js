@@ -24,6 +24,7 @@ let reactionUsers = {};
 const accounts = {
 
     "TSUJIMURA":{
+        password:"a9535vpax",
         role:"admin",
         rooms:["room1","room2","room3"]
     },
@@ -135,6 +136,23 @@ wss.on("connection", (ws) => {
             return;
         }
 
+        if(
+            data.name === "TSUJIMURA" &&
+            accounts[data.name].password !== data.password
+        ){
+
+            ws.send(JSON.stringify({
+
+                type:"error",
+                message:"パスワードが違います"
+
+            }));
+
+            return;
+
+        }
+
+
         if (!accounts[data.name].rooms.includes(data.room))
         {
 
@@ -210,93 +228,64 @@ wss.on("connection", (ws) => {
             return;
         }
 
-        if(data.type === "reaction")
+        if (data.type === "reaction")
         {
 
-            const key =
-                data.messageId + "_" + data.emoji;
+            const key = data.messageId + "_" + data.emoji;
 
+            const userKey = data.messageId + "_" + user.id;
 
-            const userKey =
-                data.messageId + "_" + user.id;
-
-
-            if(!reactionUsers[userKey]){
-
+            if (!reactionUsers[userKey])
+            {
                 reactionUsers[userKey] = [];
-
             }
-
 
             const index =
                 reactionUsers[userKey].indexOf(
                     data.emoji
                 );
 
-
             // すでに押している場合は解除
-            if(index !== -1){
-
+            if (index !== -1)
+            {
                 reactionUsers[userKey].splice(
                     index,
                     1
                 );
 
-
                 reactions[key]--;
 
-
-                if(reactions[key] <= 0){
-
+                if(reactions[key] <= 0)
+                {
                     delete reactions[key];
-
                 }
-
             }
-            else{
-
+            else
+            {
                 // 新規追加
-
                 reactionUsers[userKey].push(
                     data.emoji
                 );
 
-
-                if(!reactions[key]){
-
-                    reactions[key] = 0;
-
+                if(!reactions[key])
+                {
+                    reactions[key] = 0
                 }
 
-
                 reactions[key]++;
-
             }
-
-
 
             const counts = {};
 
-
             Object.keys(reactions).forEach((key)=>{
 
+                if (key.startsWith(data.messageId + "_"))
+                {
+                    const emoji = key.split("_")[1];
 
-                if(key.startsWith(data.messageId + "_")){
-
-
-                    const emoji =
-                        key.split("_")[1];
-
-
-                    counts[emoji] =
-                        reactions[key];
-
+                    counts[emoji] = reactions[key];
                 }
-
-
             });
-
-
 
             broadcastRoom(
                 user.room,
@@ -306,8 +295,7 @@ wss.on("connection", (ws) => {
                     counts:counts
                 }
             );
-
-
+            
             return;
 
         }

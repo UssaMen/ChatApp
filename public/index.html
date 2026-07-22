@@ -329,6 +329,8 @@ select {
 <div class="user-input">
     名前：
     <input id="name" type="text" autocomplete="off">
+    パスワード：
+    <input id="password" type="password">
     部屋：
     <select id="room"></select>
     入室
@@ -823,10 +825,11 @@ function joinRoom(){
     const name =
         document.getElementById("name").value;
 
-
     const room =
         document.getElementById("room").value;
-
+    
+    const password =
+        document.getElementById("password").value;
 
     if(name === ""){
 
@@ -846,7 +849,9 @@ function joinRoom(){
 
         name:name,
 
-        room:room
+        room:room,
+
+        password:password
 
     }));
 
