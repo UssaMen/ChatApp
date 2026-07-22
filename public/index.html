@@ -371,10 +371,22 @@ select {
 <script>
 
 const rooms = [
-    "ALL",
-    "room1",
-    "room2",
-    "room3"
+    {
+        id:"ALL",
+        name:"🌐 全体チャット"
+    },
+    {
+        id:"room1",
+        name:"🔒 INO"
+    },
+    {
+        id:"room2",
+        name:"🔒 IGARASHI"
+    },
+    {
+        id:"room3",
+        name:"🔒 雑談ルーム"
+    }
 ];
 
 function setupRooms(){
@@ -387,11 +399,13 @@ function setupRooms(){
         const option =
             document.createElement("option");
 
-        option.value = room;
-        option.text = room;
+        option.value =
+            room.id;
+
+        option.text =
+            room.name;
 
         select.appendChild(option);
-
     });
 }
 
