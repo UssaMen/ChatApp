@@ -105,12 +105,11 @@ ws.onopen = function(){
 
     ws.send(JSON.stringify({
 
-        type:"join",
+        type:"boardJoin",
 
         room:room
 
     }));
-
 };
 
 const canvas = document.getElementById("board");

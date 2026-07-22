@@ -64,14 +64,11 @@ wss.on("connection", (ws) => {
             data.type === "draw"
         ){
 
-            data.room = user.room;
-
-
             boardHistory.push(data);
 
 
             broadcastRoom(
-                user.room,
+                data.room,
                 data
             );
 
@@ -83,14 +80,34 @@ wss.on("connection", (ws) => {
 
             boardHistory =
                 boardHistory.filter(
-                    item => item.room !== user.room
+                    item => item.room !== data.room
                 );
 
 
             broadcastRoom(
-                user.room,
+                data.room,
                 data
             );
+
+
+            return;
+
+        }
+
+        if(data.type === "boardJoin"){
+
+
+            boardHistory.forEach((item)=>{
+
+
+                if(item.room === data.room){
+
+                    ws.send(JSON.stringify(item));
+
+                }
+
+
+            });
 
 
             return;
