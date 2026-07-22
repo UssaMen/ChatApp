@@ -101,13 +101,18 @@ const ws = new WebSocket(
     location.origin.replace("http","ws")
 );
 
+const clientId =
+    crypto.randomUUID();
+
 ws.onopen = function(){
 
     ws.send(JSON.stringify({
 
         type:"boardJoin",
 
-        room:room
+        room:room,
+
+        clientId:clientId
 
     }));
 };
@@ -204,6 +209,8 @@ canvas.addEventListener(
 
             room:room,
 
+            clientId:clientId,
+
             x:e.offsetX,
 
             y:e.offsetY,
@@ -236,7 +243,11 @@ canvas.addEventListener(
         ws.send(JSON.stringify({
 
             type:"start",
+
             room:room,
+
+            clientId:clientId,
+
             x:e.offsetX,
 
             y:e.offsetY,

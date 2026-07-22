@@ -100,6 +100,7 @@ wss.on("connection", (ws) => {
         if(data.type === "boardJoin"){
 
             ws.boardRoom = data.room;
+            ws.clientId = data.clientId;
 
             boardHistory.forEach((item)=>{
 
@@ -327,7 +328,8 @@ function broadcastBoard(room, data){
 
         if(
             client.readyState === WebSocket.OPEN &&
-            client.boardRoom === room
+            client.boardRoom === room &&
+            client.clientId !== data.clientId
         ){
 
             client.send(JSON.stringify(data));
@@ -336,7 +338,7 @@ function broadcastBoard(room, data){
 
     });
 
-}
+}   
 
 // オンライン一覧送信
 function sendUserList()
