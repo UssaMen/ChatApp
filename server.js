@@ -15,6 +15,7 @@ const wss = new WebSocket.Server({server});
 let users = new Map();
 let messages = [];
 let pinnedMessages = [];
+let boardHistory = [];
 
 //ユーザー追加
 const accounts = {
@@ -58,8 +59,46 @@ wss.on("connection", (ws) => {
         const data = JSON.parse(message);
         const user = users.get(ws);
 
+        if(
+            data.type === "start" ||
+            data.type === "draw"
+        ){
+
+            data.room = user.room;
+
+
+            boardHistory.push(data);
+
+
+            broadcastRoom(
+                user.room,
+                data
+            );
+
+            return;
+
+        }
+
+        if(data.type === "clear"){
+
+            boardHistory =
+                boardHistory.filter(
+                    item => item.room !== user.room
+                );
+
+
+            broadcastRoom(
+                user.room,
+                data
+            );
+
+
+            return;
+
+        }
+
         // 入室
-    if (data.type === "join"){
+        if (data.type === "join"){
 
         if (!accounts[data.name])
         {

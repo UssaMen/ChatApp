@@ -101,6 +101,18 @@ const ws = new WebSocket(
     location.origin.replace("http","ws")
 );
 
+ws.onopen = function(){
+
+    ws.send(JSON.stringify({
+
+        type:"join",
+
+        room:room
+
+    }));
+
+};
+
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
@@ -124,7 +136,8 @@ canvas.addEventListener(
         drawing = false;
 
         ws.send(JSON.stringify({
-            type:"stop"
+            type:"stop",
+            room:room
         }));
 
     }
@@ -190,6 +203,8 @@ canvas.addEventListener(
 
             type:"draw",
 
+            room:room,
+
             x:e.offsetX,
 
             y:e.offsetY,
@@ -222,7 +237,7 @@ canvas.addEventListener(
         ws.send(JSON.stringify({
 
             type:"start",
-
+            room:room,
             x:e.offsetX,
 
             y:e.offsetY,
@@ -245,7 +260,8 @@ function clearBoard(){
 
     ws.send(JSON.stringify({
 
-        type:"clear"
+        type:"clear",
+        room:room
 
     }));
 
