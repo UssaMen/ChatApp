@@ -297,7 +297,7 @@ select {
     ☰
     </button>
 
-    <button class="tool-button" onclick="openBoard()">
+    <button class="tool-button" onclick="openBoardWindow()">
     🖊 WhiteBoard
     </button>
 
@@ -789,14 +789,17 @@ function joinRoom(){
 
 }
 
-function openBoard(){
+function openBoardWindow(){
 
     const room =
         document.getElementById("room").value;
 
 
-    window.location.href =
-        "/board.html?room=" + room;
+    window.open(
+        "/board.html?room=" + room,
+        "WhiteBoard",
+        "width=900,height=700"
+    );
 
 }
 
