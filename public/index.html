@@ -277,6 +277,29 @@ select {
 
 }
 
+.reaction-area {
+
+    margin-top:5px;
+    color:#0bffeb;
+    font-size:13px;
+
+}
+
+.reaction-buttons {
+
+    display:none;
+
+    margin-top:5px;
+
+}
+
+
+.balloon:hover .reaction-buttons {
+
+    display:block;
+
+}
+
 </style>
 
 </head>
@@ -411,7 +434,6 @@ ws.onmessage = function(event)
 
     if(data.type === "reaction")
     {
-
         const area =
             document.getElementById(
                 "reaction-" + data.messageId
@@ -419,14 +441,15 @@ ws.onmessage = function(event)
 
         if(area)
         {
-
-            area.innerHTML +=
-                data.emoji;
-
+            area.innerHTML = "";
+            Object.keys(data.counts).forEach((emoji)=>{
+                area.innerHTML +=
+                    emoji + " " +
+                    data.counts[emoji] +
+                    " ";
+            });
         }
-        
         return;
-
     }
 
 
@@ -578,21 +601,26 @@ ws.onmessage = function(event)
                     id="reaction-${data.messageId}">
                 </div>
 
-                <button onclick="reaction('${data.messageId}','👍')">
-                    👍
-                </button>
+                <div class="reaction-buttons">
 
-                <button onclick="reaction('${data.messageId}','❤️')">
-                    ❤️
-                </button>
+                    <button onclick="reaction('${data.messageId}','👍')">
+                        👍
+                    </button>
 
-                <button onclick="reaction('${data.messageId}','😂')">
-                    😂
-                </button>
+                    <button onclick="reaction('${data.messageId}','❤️')">
+                        ❤️
+                    </button>
 
-                <button class="pin-button"  onclick="pinMessage(\`${data.text}\`)">
-                    📌
-                </button>   
+                    <button onclick="reaction('${data.messageId}','😂')">
+                        😂
+                    </button>
+
+                    <button class="pin-button"
+                        onclick="pinMessage(\`${data.text}\`)">
+                        📌
+                    </button>
+
+                </div>
 
             </div>
         </div>

@@ -17,6 +17,8 @@ let messages = [];
 let pinnedMessages = [];
 let boardHistory = [];
 let boardClients = [];
+let reactions = {};
+let reactionUsers = {};
 
 //ユーザー追加
 const accounts = {
@@ -206,6 +208,108 @@ wss.on("connection", (ws) => {
             );
 
             return;
+        }
+
+        if(data.type === "reaction")
+        {
+
+            const key =
+                data.messageId + "_" + data.emoji;
+
+
+            const userKey =
+                data.messageId + "_" + user.id;
+
+
+            if(!reactionUsers[userKey]){
+
+                reactionUsers[userKey] = [];
+
+            }
+
+
+            const index =
+                reactionUsers[userKey].indexOf(
+                    data.emoji
+                );
+
+
+            // すでに押している場合は解除
+            if(index !== -1){
+
+                reactionUsers[userKey].splice(
+                    index,
+                    1
+                );
+
+
+                reactions[key]--;
+
+
+                if(reactions[key] <= 0){
+
+                    delete reactions[key];
+
+                }
+
+            }
+            else{
+
+                // 新規追加
+
+                reactionUsers[userKey].push(
+                    data.emoji
+                );
+
+
+                if(!reactions[key]){
+
+                    reactions[key] = 0;
+
+                }
+
+
+                reactions[key]++;
+
+            }
+
+
+
+            const counts = {};
+
+
+            Object.keys(reactions).forEach((key)=>{
+
+
+                if(key.startsWith(data.messageId + "_")){
+
+
+                    const emoji =
+                        key.split("_")[1];
+
+
+                    counts[emoji] =
+                        reactions[key];
+
+                }
+
+
+            });
+
+
+
+            broadcastRoom(
+                user.room,
+                {
+                    type:"reaction",
+                    messageId:data.messageId,
+                    counts:counts
+                }
+            );
+
+
+            return;
+
         }
 
         if (data.type === "read")
