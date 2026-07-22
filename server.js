@@ -23,17 +23,20 @@ let reactionUsers = {};
 //ユーザー追加
 const accounts = {
 
+    //管理者
     "TSUJIMURA":{
         password:"a9535vpax",
         role:"admin",
         rooms:["room1","room2","room3"]
     },
 
+    //利用者1
     "INO":{
         role:"user",
         rooms:["room1"]
     },
 
+    //利用者2
     "IGARASHI":{
         role:"user",
         rooms:["room2"]
