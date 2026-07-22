@@ -125,7 +125,10 @@ wss.on("connection", (ws) => {
         // 入室
         if (data.type === "join"){
 
-        if (!accounts[data.name])
+        if(
+            data.room !== "ALL" &&
+            !accounts[data.name]
+        )
         {
             ws.send(JSON.stringify({
 
@@ -133,6 +136,7 @@ wss.on("connection", (ws) => {
                 message:"登録されていないユーザーです"
 
             }));
+
             return;
         }
 
@@ -168,7 +172,20 @@ wss.on("connection", (ws) => {
         }
 
         user.name = data.name;
-        user.role = accounts[data.name].role;
+        
+        if(accounts[data.name])
+        {
+
+            user.role =
+                accounts[data.name].role;
+
+        }
+        else
+        {
+
+            user.role = "guest";
+
+        }
         user.room = data.room;
 
         broadcastRoom(
