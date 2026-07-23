@@ -128,76 +128,76 @@ wss.on("connection", (ws) => {
         // 入室
         if (data.type === "join"){
 
-        if(
-            data.room !== "ALL" &&
-            !accounts[data.name]
-        )
-        {
-            ws.send(JSON.stringify({
-
-                type:"error",
-                message:"登録されていないユーザーです"
-
-            }));
-
-            return;
-        }
-
-        if(
-            data.name === "TSUJIMURA" &&
-            accounts[data.name].password !== data.password
-        ){
-
-            ws.send(JSON.stringify({
-
-                type:"error",
-                message:"パスワードが違います"
-
-            }));
-
-            return;
-
-        }
-
-
-        if(data.room !== "ALL" &&
-            !accounts[data.name].rooms.includes(data.room))
-        {
-
-            ws.send(JSON.stringify({
-
-                type:"error",
-                message:"この部屋には入室できません"
-
-            }));
-
-            return;
-        }
-
-        user.name = data.name;
-        
-        if(accounts[data.name])
-        {
-
-            user.role =
-                accounts[data.name].role;
-
-        }
-        else
-        {
-
-            user.role = "guest";
-
-        }
-        user.room = data.room;
-
-        broadcastRoom(
-            user.room,
+            if(
+                data.room !== "ALL" &&
+                !accounts[data.name]
+            )
             {
-                type:"system",
-                message:user.name + " さんが入室しました"
+                ws.send(JSON.stringify({
+
+                    type:"error",
+                    message:"登録されていないユーザーです"
+
+                }));
+
+                return;
             }
-        );
+
+            if(
+                data.name === "TSUJIMURA" &&
+                accounts[data.name].password !== data.password
+            ){
+
+                ws.send(JSON.stringify({
+
+                    type:"error",
+                    message:"パスワードが違います"
+
+                }));
+
+                return;
+
+            }
+
+
+            if(data.room !== "ALL" &&
+                !accounts[data.name].rooms.includes(data.room))
+            {
+
+                ws.send(JSON.stringify({
+
+                    type:"error",
+                    message:"この部屋には入室できません"
+
+                }));
+
+                return;
+            }
+
+            user.name = data.name;
+            
+            if(accounts[data.name])
+            {
+
+                user.role =
+                    accounts[data.name].role;
+
+            }
+            else
+            {
+
+                user.role = "guest";
+
+            }
+            user.room = data.room;
+
+            broadcastRoom(
+                user.room,
+                {
+                    type:"system",
+                    message:user.name + " さんが入室しました"
+                }
+            );
 
             messages.forEach((msg)=>{
 
@@ -284,7 +284,6 @@ wss.on("connection", (ws) => {
             }
             else
             {
-                // 新規追加
                 reactionUsers[userKey].push(
                     data.emoji
                 );
@@ -322,6 +321,23 @@ wss.on("connection", (ws) => {
 
         }
 
+        //リアクション
+        if (data.type === "reaction")
+        {
+
+            broadcastRoom(
+                user.room,
+                {
+                    type:"reaction",
+                    messageId:data.messageId,
+                    emoji:data.emoji
+                }
+            );
+
+            return;
+        }
+
+        //既読
         if (data.type === "read")
         {
             broadcastRoom(
@@ -336,6 +352,7 @@ wss.on("connection", (ws) => {
             return;
         }
 
+        //ピン止め
         if (data.type === "pin")
         {
             pinnedMessages.push({
@@ -355,6 +372,7 @@ wss.on("connection", (ws) => {
             return;
         }
 
+        //ピン止め解除
         if (data.type === "unpin")
         {
             pinnedMessages = pinnedMessages.filter(msg => msg.id !== data.id);
@@ -364,21 +382,6 @@ wss.on("connection", (ws) => {
                 {
                     type:"pin",
                     pinnedMessages:pinnedMessages
-                }
-            );
-
-            return;
-        }
-
-        if (data.type === "reaction")
-        {
-
-            broadcastRoom(
-                user.room,
-                {
-                    type:"reaction",
-                    messageId:data.messageId,
-                    emoji:data.emoji
                 }
             );
 
