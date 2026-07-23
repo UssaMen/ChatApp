@@ -26,13 +26,9 @@ button {
 }
 
 #status {
-
     height:20px;
-
     color:#9cdcfe;
-
     font-size:13px;
-
 }
 
 </style>
@@ -45,8 +41,7 @@ button {
 🖊 WhiteBoard
 </h2>
 
-<div id="status">
-</div>
+<div id="status"></div>
 
 <canvas id="board"
         width="800"
@@ -97,36 +92,24 @@ button {
 
 <script>
 
-const ws = new WebSocket(
-    location.origin.replace("http","ws")
-);
+const ws = new WebSocket(location.origin.replace("http","ws"));
 
-const clientId =
-    crypto.randomUUID();
+const clientId = crypto.randomUUID();
 
 ws.onopen = function(){
-
     ws.send(JSON.stringify({
-
         type:"boardJoin",
-
         room:room,
-
         clientId:clientId
-
     }));
 };
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
-const params =
-    new URLSearchParams(
-        location.search
-    );
+const params = new URLSearchParams(location.search);
 
-const room =
-    params.get("room");
+const room = params.get("room");
 
 let drawing = false;
 let currentColor = "black";
@@ -136,14 +119,11 @@ let eraserMode = false;
 canvas.addEventListener(
     "mouseup",
     function(){
-
         drawing = false;
-
         ws.send(JSON.stringify({
             type:"stop",
             room:room
         }));
-
     }
 );
 
@@ -151,78 +131,47 @@ canvas.addEventListener(
     "mousemove",
     function(e){
 
-        if(!drawing){
-
+        if (!drawing)
+        {
             return;
-
         }
 
-
-        if(eraserMode){
-
+        if (eraserMode)
+        {
             ctx.lineWidth = 20;
-
-        }else{
-
+        }else
+        {
             ctx.lineWidth = lineWidth;
-
         }
 
         ctx.lineCap = "round";
 
-        if(eraserMode){
-
+        if (eraserMode)
+        {
             ctx.globalCompositeOperation =
                 "destination-out";
-
-        }else{
-
-            ctx.globalCompositeOperation =
-                "source-over";
-
-            ctx.strokeStyle =
-                currentColor;
-
+        }
+        else
+        {
+            ctx.globalCompositeOperation = "source-over";
+            ctx.strokeStyle = currentColor;
         }
 
-        ctx.lineTo(
-            e.offsetX,
-            e.offsetY
-        );
-
-
+        ctx.lineTo(e.offsetX, e.offsetY);
         ctx.stroke();
-
-
         ctx.beginPath();
-
-
-        ctx.moveTo(
-            e.offsetX,
-            e.offsetY
-        );
-
+        ctx.moveTo(e.offsetX, e.offsetY);
 
         ws.send(JSON.stringify({
-
             type:"draw",
-
             room:room,
-
             clientId:clientId,
-
             x:e.offsetX,
-
             y:e.offsetY,
-
             color:currentColor,
-
             width:lineWidth,
-
             eraser:eraserMode
-
         }));
-
     }
 );
 
@@ -233,29 +182,15 @@ canvas.addEventListener(
         drawing = true;
 
         ctx.beginPath();
-
-        ctx.moveTo(
-            e.offsetX,
-            e.offsetY
-        );
-
-
+        ctx.moveTo(e.offsetX, e.offsetY);
         ws.send(JSON.stringify({
-
             type:"start",
-
             room:room,
-
             clientId:clientId,
-
             x:e.offsetX,
-
             y:e.offsetY,
-
             name:"ユーザー"
-
         }));
-
     }
 );
 
@@ -269,21 +204,17 @@ function clearBoard(){
     );
 
     ws.send(JSON.stringify({
-
         type:"clear",
         room:room
-
     }));
-
 }
 
 ws.onmessage = function(event){
 
-    const data =
-        JSON.parse(event.data);
+    const data = JSON.parse(event.data);
 
-    if(data.type === "clear"){
-
+    if (data.type === "clear")
+    {
         ctx.clearRect(
             0,
             0,
@@ -292,13 +223,12 @@ ws.onmessage = function(event){
         );
 
         return;
-
     }
 
-    if(data.type === "start"){
-
-    document.getElementById("status").innerHTML =
-        "🟢 " + data.name + " さんが描画中";
+    if (data.type === "start")
+    {
+        document.getElementById("status").innerHTML =
+            "🟢 " + data.name + " さんが描画中";
 
         ctx.closePath();
         
@@ -312,70 +242,51 @@ ws.onmessage = function(event){
         return;
     }
 
-    if(data.type === "draw"){
-
+    if (data.type === "draw")
+    {
         ctx.lineWidth = data.width;
         ctx.lineCap = "round";
 
-        if(data.eraser){
-
+        if(data.eraser)
+        {
             ctx.globalCompositeOperation =
                 "destination-out";
-
-
-        }else{
-
+        }
+        else
+        {
             ctx.globalCompositeOperation =
                 "source-over";
-
             ctx.strokeStyle =
                 data.color;
-
         }
 
-        ctx.lineTo(
-            data.x,
-            data.y
-        );
+        ctx.lineTo(data.x, data.y);
 
         ctx.stroke();
-
         ctx.beginPath();
-
-        ctx.moveTo(
-            data.x,
-            data.y
-        );
+        ctx.moveTo(data.x, data.y);
 
     }
 
-    if(data.type === "stop"){
-
+    if (data.type === "stop")
+    {
         document.getElementById("status").innerHTML="";
-
         return;
-
     }
 
 };
 
 function setColor(color){
-
     currentColor = color;
-
 }
 
 function setWidth(width){
-
     lineWidth = width;
-
 }
 
 
 function setEraser(mode){
-
     eraserMode = mode;
-
 }
 
 </script>

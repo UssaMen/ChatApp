@@ -68,10 +68,9 @@ wss.on("connection", (ws) => {
         const data = JSON.parse(message);
         const user = users.get(ws);
 
-        if(
-            data.type === "start" ||
-            data.type === "draw"
-        ){
+        if( data.type === "start" ||
+            data.type === "draw")
+        {
 
             boardHistory.push(data);
 
@@ -85,7 +84,8 @@ wss.on("connection", (ws) => {
 
         }
 
-        if(data.type === "clear"){
+        if(data.type === "clear")
+        {
 
             boardHistory =
                 boardHistory.filter(
@@ -103,8 +103,8 @@ wss.on("connection", (ws) => {
 
         }
 
-        if(data.type === "boardJoin"){
-
+        if(data.type === "boardJoin")
+        {
             ws.boardRoom = data.room;
             ws.clientId = data.clientId;
 
@@ -126,7 +126,8 @@ wss.on("connection", (ws) => {
         }
 
         // 入室
-        if (data.type === "join"){
+        if (data.type === "join")
+        {
 
             if(
                 data.room !== "ALL" &&

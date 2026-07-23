@@ -132,7 +132,6 @@ button {
     flex-shrink:0;
 }
 
-
 .input-area textarea {
     flex:1;
     background:#333;
@@ -278,26 +277,19 @@ select {
 }
 
 .reaction-area {
-
     margin-top:5px;
     color:#0bffeb;
     font-size:13px;
-
 }
 
 .reaction-buttons {
-
     display:none;
-
     margin-top:5px;
-
 }
 
 
 .balloon:hover .reaction-buttons {
-
     display:block;
-
 }
 
 </style>
@@ -373,46 +365,39 @@ select {
 const rooms = [
     {
         id:"ALL",
-        name:"🌐 全体チャット"
+        name:"🌐 ALL"
     },
     {
         id:"room1",
-        name:"🔒 INO"
+        name:"🔒 ROOM1"
     },
     {
         id:"room2",
-        name:"🔒 IGARASHI"
+        name:"🔒 ROOM2"
     },
     {
         id:"room3",
-        name:"🔒 未使用"
+        name:"🔒 NON"
     }
 ];
 
-function setupRooms(){
+function setupRooms()
+{
 
-    const select =
-        document.getElementById("room");
+    const select = document.getElementById("room");
 
-    rooms.forEach(room=>{
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            room.id;
-
-        option.text =
-            room.name;
-
+    rooms.forEach(room=>
+    {
+        const option = document.createElement("option");
+        option.value = room.id;
+        option.text = room.name;
         select.appendChild(option);
     });
 }
 
-window.onload = function(){
-
+window.onload = function()
+{
     setupRooms();
-
 };
 
 if (Notification.permission !== "granted")
@@ -434,7 +419,8 @@ ws.onmessage = function(event)
 {
     const data = JSON.parse(event.data);
 
-    if (data.type === "error"){
+    if (data.type === "error")
+    {
         alert(data.message);
         return;
     }
@@ -449,14 +435,14 @@ ws.onmessage = function(event)
     }
 
 
-    if(data.type === "reaction")
+    if (data.type === "reaction")
     {
         const area =
             document.getElementById(
                 "reaction-" + data.messageId
             );
 
-        if(area)
+        if (area)
         {
             area.innerHTML = "";
             Object.keys(data.counts).forEach((emoji)=>{
@@ -470,7 +456,7 @@ ws.onmessage = function(event)
     }
 
 
-    if(data.type === "read")
+    if (data.type === "read")
     {
         const target = document.getElementById("read-" + data.messageId);
 
@@ -645,7 +631,7 @@ ws.onmessage = function(event)
     `;
 
     // 既読処理
-    if(data.id !== myId)
+    if (data.id !== myId)
     {
         ws.send(JSON.stringify({
             type:"read",
@@ -657,24 +643,20 @@ ws.onmessage = function(event)
     scrollToBottom();
 };
 
-function sendMessage(){
-
-    if(myName === ""){
-
+function sendMessage()
+{
+    if (myName === "")
+    {
         alert("先に入室してください");
-
-        return;
-
-    }
-
-    const input =
-        document.getElementById("input").value;
-
-
-    if(input === ""){
         return;
     }
 
+    const input = document.getElementById("input").value;
+
+    if (input === "")
+    {
+        return;
+    }
 
     ws.send(JSON.stringify({
 
@@ -683,9 +665,7 @@ function sendMessage(){
 
     }));
 
-
     document.getElementById("input").value="";
-
     document.getElementById("input").style.height="20px";
 
 }
@@ -835,39 +815,25 @@ function unpinMessage(id)
     }));
 }
 
-function joinRoom(){
+function joinRoom()
+{
+    const name = document.getElementById("name").value;
+    const room = document.getElementById("room").value;
+    const password = document.getElementById("password").value;
 
-    const name =
-        document.getElementById("name").value;
-
-    const room =
-        document.getElementById("room").value;
-    
-    const password =
-        document.getElementById("password").value;
-
-    if(name === ""){
-
+    if (name === "")
+    {
         alert("名前を入力してください");
-
         return;
-
     }
-
 
     myName = name;
 
-
     ws.send(JSON.stringify({
-
         type:"join",
-
         name:name,
-
         room:room,
-
         password:password
-
     }));
 
     document.getElementById("name").disabled=true;
@@ -875,32 +841,24 @@ function joinRoom(){
 
 }
 
-function openBoardWindow(){
-
-    const room =
-        document.getElementById("room").value;
-
+function openBoardWindow()
+{
+    const room = document.getElementById("room").value;
 
     window.open(
         "/board.html?room=" + room,
         "WhiteBoard",
         "width=900,height=700"
     );
-
 }
 
-function reaction(messageId, emoji){
-
+function reaction(messageId, emoji)
+{
     ws.send(JSON.stringify({
-
         type:"reaction",
-
         messageId:messageId,
-
         emoji:emoji
-
     }));
-
 }
 
 </script>
