@@ -32,6 +32,7 @@ const accounts = {
 
     //利用者1
     "INO":{
+        password:"n7379",
         role:"user",
         rooms:["room1"]
     },
@@ -144,22 +145,17 @@ wss.on("connection", (ws) => {
                 return;
             }
 
-            if(
-                data.name === "TSUJIMURA" &&
-                accounts[data.name].password !== data.password
-            ){
-
+            if(accounts[data.name].password &&
+                accounts[data.name].password !== data.password)
+            {
                 ws.send(JSON.stringify({
 
                     type:"error",
                     message:"パスワードが違います"
-
                 }));
 
                 return;
-
             }
-
 
             if(data.room !== "ALL" &&
                 !accounts[data.name].rooms.includes(data.room))
