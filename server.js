@@ -476,29 +476,23 @@ function broadcastBoard(room, data){
 // オンライン一覧送信
 function sendUserList()
 {
-    const list = [];
 
-    users.forEach((user)=>{
-        if(user.name)
-        {
-            list.push(user.name);
-        }
-    });
+    users.forEach((targetUser, client)=>{
+        const list = [];
 
+        users.forEach((user)=>{
+            if(
+                user.name &&
+                user.room === targetUser.room
+            ){
+                list.push(user.name);
+            }
+        });
 
-    users.forEach((user, client)=>{
-
-        if(user.room){
-
-            client.send(JSON.stringify({
-
-                type:"users",
-                users:list
-
-            }));
-
-        }
-
+        client.send(JSON.stringify({
+            type:"users",
+            users:list
+        }));
     });
 
 }
