@@ -145,13 +145,17 @@ wss.on("connection", (ws) => {
                 return;
             }
 
-            if(accounts[data.name].password &&
-                accounts[data.name].password !== data.password)
-            {
+            if(
+                accounts[data.name] &&
+                accounts[data.name].password &&
+                accounts[data.name].password !== data.password
+            ){
+
                 ws.send(JSON.stringify({
 
                     type:"error",
                     message:"パスワードが違います"
+
                 }));
 
                 return;
