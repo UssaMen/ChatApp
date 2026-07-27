@@ -3,13 +3,10 @@ const http = require("http");
 const WebSocket = require("ws");
 const crypto = require("crypto");
 const app = express();
-
-app.use(express.static("public"));
-
 const server = http.createServer(app);
-
 const wss = new WebSocket.Server({server});
 
+app.use(express.static("public"));
 
 // 接続中ユーザー
 let users = new Map();
@@ -38,7 +35,7 @@ const accounts = {
     },
 
     //利用者2
-    "IGARASHI":{
+    "USER":{
         role:"user",
         rooms:["room2"]
     }
@@ -69,12 +66,10 @@ wss.on("connection", (ws) => {
         const data = JSON.parse(message);
         const user = users.get(ws);
 
-        if( data.type === "start" ||
+        if ( data.type === "start" ||
             data.type === "draw")
         {
-
             boardHistory.push(data);
-
 
             broadcastBoard(
                 data.room,
@@ -82,58 +77,44 @@ wss.on("connection", (ws) => {
             );
 
             return;
-
         }
 
-        if(data.type === "clear")
+        if (data.type === "clear")
         {
-
             boardHistory =
                 boardHistory.filter(
-                    item => item.room !== data.room
-                );
-
+                    item => item.room !== data.room);
 
             broadcastRoom(
                 data.room,
                 data
             );
 
-
             return;
-
         }
 
-        if(data.type === "boardJoin")
+        if (data.type === "boardJoin")
         {
             ws.boardRoom = data.room;
             ws.clientId = data.clientId;
 
             boardHistory.forEach((item)=>{
 
-
-                if(item.room === data.room){
-
+                if (item.room === data.room)
+                {
                     ws.send(JSON.stringify(item));
-
                 }
-
-
             });
 
-
             return;
-
         }
 
         // 入室
         if (data.type === "join")
         {
 
-            if(
-                data.room !== "ALL" &&
-                !accounts[data.name]
-            )
+            if (data.room !== "ALL" &&
+                !accounts[data.name])
             {
                 ws.send(JSON.stringify({
 
@@ -145,11 +126,10 @@ wss.on("connection", (ws) => {
                 return;
             }
 
-            if(
-                accounts[data.name] &&
+            if (accounts[data.name] &&
                 accounts[data.name].password &&
-                accounts[data.name].password !== data.password
-            ){
+                accounts[data.name].password !== data.password)
+            {
 
                 ws.send(JSON.stringify({
 
@@ -161,7 +141,7 @@ wss.on("connection", (ws) => {
                 return;
             }
 
-            if(data.room !== "ALL" &&
+            if (data.room !== "ALL" &&
                 !accounts[data.name].rooms.includes(data.room))
             {
 
@@ -177,18 +157,13 @@ wss.on("connection", (ws) => {
 
             user.name = data.name;
             
-            if(accounts[data.name])
+            if (accounts[data.name])
             {
-
-                user.role =
-                    accounts[data.name].role;
-
+                user.role = accounts[data.name].role;
             }
             else
             {
-
                 user.role = "guest";
-
             }
             user.room = data.room;
 
@@ -201,18 +176,13 @@ wss.on("connection", (ws) => {
             );
 
             messages.forEach((msg)=>{
-
-                if(msg.room === user.room){
-
+                if (msg.room === user.room)
+                {
                     ws.send(JSON.stringify({
-
                         ...msg,
                         history:true
-
                     }));
-
                 }
-
             });
 
             sendUserList();
@@ -237,7 +207,6 @@ wss.on("connection", (ws) => {
 
         if (data.type === "typing")
         {
-
             broadcastRoom(
                 user.room,
                 {
@@ -255,7 +224,6 @@ wss.on("connection", (ws) => {
         {
 
             const key = data.messageId + "_" + data.emoji;
-
             const userKey = data.messageId + "_" + user.id;
 
             if (!reactionUsers[userKey])
@@ -389,29 +357,22 @@ wss.on("connection", (ws) => {
             return;
         }
 
-        if(data.type === "clearChat")
+        if (data.type === "clearChat")
         {
-
-            if(user.name !== "TSUJIMURA"){
-
+            if (user.name !== "TSUJIMURA")
+            {
                 ws.send(JSON.stringify({
-
                     type:"error",
-
                     message:"権限がありません"
-
                 }));
 
                 return;
-
             }
-
 
             messages =
                 messages.filter(
                     msg => msg.room !== user.room
                 );
-
 
             broadcastRoom(
                 user.room,
@@ -420,15 +381,12 @@ wss.on("connection", (ws) => {
                 }
             );
 
-
             return;
-
         }
 
         if (data.type === "message")
         {
             const messageData = {
-
                 type:"message",
                 messageId: crypto.randomUUID(),
                 room:user.room,
@@ -442,7 +400,6 @@ wss.on("connection", (ws) => {
                     hour:"2-digit",
                     minute:"2-digit"
                 })
-
             };
 
             // 履歴へ保存
@@ -492,27 +449,19 @@ function broadcastRoom(room, data)
 }
 
 function broadcastBoard(room, data){
-
     boardClients.forEach((client)=>{
-
-        if(
-            client.readyState === WebSocket.OPEN &&
+        if (client.readyState === WebSocket.OPEN &&
             client.boardRoom === room &&
-            client.clientId !== data.clientId
-        ){
-
+            client.clientId !== data.clientId)
+        {
             client.send(JSON.stringify(data));
-
         }
-
     });
-
 }   
 
 // オンライン一覧送信
 function sendUserList()
 {
-
     users.forEach((targetUser, client)=>{
         const list = [];
 
@@ -530,7 +479,6 @@ function sendUserList()
             users:list
         }));
     });
-
 }
 
 server.listen(process.env.PORT || 3000, () => {
