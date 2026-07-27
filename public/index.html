@@ -16,7 +16,7 @@ body {
     flex: 1;
     width: auto;
     height: 0;
-    border: 1px solid #333;
+    border: 1px solid #334;
     padding: 15px;
     overflow-y: auto;
     background:#1e1e1e;
@@ -316,6 +316,15 @@ select {
     🖊 WhiteBoard
     </button>
 
+    <button 
+        class="tool-button"
+        onclick="clearChat()"
+        id="clear-chat-button"
+        style="display:none;"
+        >
+        🗑 Clear    
+    </button>
+
 </header>
 
 <div class="user-input">
@@ -423,6 +432,18 @@ ws.onmessage = function(event)
     {
         alert(data.message);
         return;
+    }
+
+    if(data.type === "clearChat")
+    {
+
+        document.getElementById(
+            "messages"
+        ).innerHTML = "";
+
+
+        return;
+
     }
 
     if (data.type === "message" &&
@@ -839,6 +860,14 @@ function joinRoom()
     document.getElementById("name").disabled=true;
     document.getElementById("room").disabled=true;
 
+    if(name === "TSUJIMURA"){
+
+    document.getElementById(
+        "clear-chat-button"
+    ).style.display = "block";
+
+}
+
 }
 
 function openBoardWindow()
@@ -859,6 +888,23 @@ function reaction(messageId, emoji)
         messageId:messageId,
         emoji:emoji
     }));
+}
+
+function clearChat(){
+
+    if(!confirm("チャット履歴を削除しますか？")){
+
+        return;
+
+    }
+
+
+    ws.send(JSON.stringify({
+
+        type:"clearChat"
+
+    }));
+
 }
 
 </script>

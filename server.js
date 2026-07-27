@@ -389,6 +389,42 @@ wss.on("connection", (ws) => {
             return;
         }
 
+        if(data.type === "clearChat")
+        {
+
+            if(user.name !== "TSUJIMURA"){
+
+                ws.send(JSON.stringify({
+
+                    type:"error",
+
+                    message:"権限がありません"
+
+                }));
+
+                return;
+
+            }
+
+
+            messages =
+                messages.filter(
+                    msg => msg.room !== user.room
+                );
+
+
+            broadcastRoom(
+                user.room,
+                {
+                    type:"clearChat"
+                }
+            );
+
+
+            return;
+
+        }
+
         if (data.type === "message")
         {
             const messageData = {
