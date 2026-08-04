@@ -35,7 +35,8 @@ const accounts = {
     },
 
     //利用者2
-    "USER":{
+    "MIYUKI":{
+        password:"1400",
         role:"user",
         rooms:["room2"]
     }
