@@ -39,6 +39,13 @@ const accounts = {
         password:"1400",
         role:"user",
         rooms:["room2"]
+    },
+
+        //利用者2
+    "NENE":{
+        password:"0616",
+        role:"user",
+        rooms:["room2","room3"]
     }
 
 };
