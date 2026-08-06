@@ -725,10 +725,24 @@ ws.onmessage = function(event)
             </div>
             <div class="balloon ${color} ${urgentClass}">
 
-                                ${
+                ${
                 data.replyTo
                 ?
-                "<div>↩ 返信メッセージ</div>"
+                `
+                <div style="
+                    background:#222;
+                    padding:5px;
+                    border-left:3px solid #00e1ff;
+                    margin-bottom:5px;
+                    font-size:12px;
+                ">
+
+                ↩ ${data.replyName}<br>
+
+                ${data.replyText.replace(/\n/g, "<br>")}
+
+                </div>
+                `
                 :
                 ""
                 }
@@ -817,6 +831,20 @@ function sendMessage()
             replyTarget
             ?
             replyTarget.messageId
+            :
+            null,
+
+        replyName:
+            replyTarget
+            ?
+            replyTarget.name
+            :
+            null,
+
+        replyText:
+            replyTarget
+            ?
+            replyTarget.text
             :
             null
 
