@@ -352,6 +352,22 @@ select {
         <button onclick="sendUrgent()">
             🚨
         </button>
+        <button onclick="sendStamp('👍')">
+        👍
+        </button>
+
+        <button onclick="sendStamp('🙆')">
+        🙆
+        </button>
+
+        <button onclick="sendStamp('🙏')">
+        🙏
+        </button>
+
+        <button onclick="sendStamp('🎉')">
+        🎉
+        </button>
+
         <button onclick="sendMessage()">
             送信
         </button>
@@ -564,6 +580,49 @@ ws.onmessage = function(event)
         scrollToBottom();
 
         return;
+    }
+
+    if (data.type === "stamp")
+    {
+
+        const messages =
+            document.getElementById("messages");
+
+        messages.innerHTML += `
+
+        <div class="message right">
+
+            <div>
+
+                <div class="name">
+                    ${data.name}
+                </div>
+
+
+                <div class="balloon">
+
+                    <div style="font-size:40px;">
+                        ${data.stamp}
+                    </div>
+
+
+                    <div class="time">
+                        ${data.time}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+
+
+        scrollToBottom();
+
+        return;
+
     }
 
     const messages = document.getElementById("messages");
@@ -896,6 +955,18 @@ function clearChat(){
     ws.send(JSON.stringify({
 
         type:"clearChat"
+
+    }));
+
+}
+
+function sendStamp(stamp){
+
+    ws.send(JSON.stringify({
+
+        type:"stamp",
+
+        stamp:stamp
 
     }));
 

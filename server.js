@@ -392,6 +392,42 @@ wss.on("connection", (ws) => {
             return;
         }
 
+        if (data.type === "stamp")
+        {
+
+            const stampData = {
+
+                type:"stamp",
+
+                id:user.id,
+
+                name:user.name,
+
+                stamp:data.stamp,
+
+                room:user.room,
+
+                time:new Date().toLocaleTimeString(
+                    "ja-JP",
+                    {
+                        hour:"2-digit",
+                        minute:"2-digit"
+                    }
+                )
+
+            };
+
+
+            broadcastRoom(
+                user.room,
+                stampData
+            );
+
+
+            return;
+
+        }
+
         if (data.type === "message")
         {
             const messageData = {
