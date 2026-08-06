@@ -330,6 +330,16 @@ select {
 
 }
 
+.reply-button {
+
+    padding:2px 5px;
+
+    font-size:12px;
+
+    margin-left:5px;
+
+}
+
 </style>
 
 </head>
@@ -475,6 +485,7 @@ const ws = new WebSocket(location.origin.replace("http", "ws"));
 
 let myName = "";
 let myId = "";
+let replyTarget = null;
 
 ws.onopen = function()
 {
@@ -714,6 +725,14 @@ ws.onmessage = function(event)
             </div>
             <div class="balloon ${color} ${urgentClass}">
 
+                                ${
+                data.replyTo
+                ?
+                "<div>↩ 返信メッセージ</div>"
+                :
+                ""
+                }
+
                 ${data.text.replace(/\n/g, "<br>")}
 
                 <div class="time">
@@ -742,6 +761,15 @@ ws.onmessage = function(event)
                     <button class="pin-button"
                         onclick="pinMessage(\`${data.text}\`)">
                         📌
+                    </button>
+
+                    <button class="reply-button"
+                        onclick="replyMessage(
+                            '${data.messageId}',
+                            '${data.name}',
+                            \`${data.text}\`
+                        )">
+                        ↩
                     </button>
 
                 </div>
@@ -782,7 +810,15 @@ function sendMessage()
     ws.send(JSON.stringify({
 
         type:"message",
-        text:input.trim()
+
+        text:input.trim(),
+
+        replyTo:
+            replyTarget
+            ?
+            replyTarget.messageId
+            :
+            null
 
     }));
 
@@ -1019,7 +1055,7 @@ function sendStamp(stamp){
 function toggleStamp(){
 
     const menu = document.getElementById("stamp-menu");
-    
+
     if (menu.style.display === "block")
     {
         menu.style.display="none";
@@ -1027,6 +1063,36 @@ function toggleStamp(){
     else {
         menu.style.display="block";
     }
+}
+
+function replyMessage(id,name,text){
+
+
+    replyTarget = {
+
+        messageId:id,
+
+        name:name,
+
+        text:text
+
+    };
+
+
+    const input =
+        document.getElementById("input");
+
+
+    input.value =
+        "↩ " +
+        name +
+        ":\n" +
+        text +
+        "\n\n";
+
+
+    input.focus();
+
 }
 
 </script>
