@@ -422,7 +422,7 @@ select {
             </button>
         </div>
 
-        <button onclick="selectFile()">
+        <button onclick="document.getElementById('file-input').click()">
         📎
         </button>
 
@@ -430,11 +430,8 @@ select {
             type="file"
             id="file-input"
             style="display:none;"
-            onchange="selectFileDone(event)"
+            onchange="sendFile(event)"
         >
-
-        <span id="selected-file">
-        </span>
 
         <button onclick="sendUrgent()">
             🚨
@@ -501,7 +498,6 @@ const ws = new WebSocket(location.origin.replace("http", "ws"));
 let myName = "";
 let myId = "";
 let replyTarget = null;
-let selectedFile = null;
 
 ws.onopen = function()
 {
@@ -867,51 +863,6 @@ function sendMessage()
         return;
     }
 
-    if(selectedFile)
-    {
-
-        const reader =
-            new FileReader();
-
-
-        reader.onload=function(){
-
-            ws.send(JSON.stringify({
-
-                type:"file",
-
-                name:selectedFile.name,
-
-                data:reader.result
-
-            }));
-
-
-        };
-
-
-        reader.readAsDataURL(
-            selectedFile
-        );
-
-
-        selectedFile=null;
-
-
-        document.getElementById(
-            "selected-file"
-        ).innerHTML="";
-
-
-        document.getElementById(
-            "file-input"
-        ).value="";
-
-
-        return;
-
-    }
-
     ws.send(JSON.stringify({
 
         type:"message",
@@ -1214,33 +1165,44 @@ function replyMessage(id,name,text){
 
 }
 
-function selectFileDone(event){
+function sendFile(event){
 
-    selectedFile =
+    const file =
         event.target.files[0];
 
 
-    if(!selectedFile){
+    if(!file){
 
         return;
 
     }
 
 
-    document.getElementById(
-        "selected-file"
-    ).innerHTML =
-
-    "📎 " + selectedFile.name;
+    const reader =
+        new FileReader();
 
 
-}
+    reader.onload = function(){
 
-function selectFile(){
 
-    document
-    .getElementById("file-input")
-    .click();
+        ws.send(JSON.stringify({
+
+            type:"file",
+
+            name:file.name,
+
+            data:reader.result
+
+        }));
+
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+
+    event.target.value="";
 
 }
 
