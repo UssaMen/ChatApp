@@ -425,6 +425,13 @@ select {
         <button onclick="sendUrgent()">
             🚨
         </button>
+
+        <input 
+            type="file"
+            id="file-input"
+            onchange="sendFile(event)"
+        >
+
         <button onclick="sendMessage()">
             送信
         </button>
@@ -453,7 +460,7 @@ const rooms = [
     },
     {
         id:"room3",
-        name:"🔒 NON"
+        name:"🔒 ROOM3"
     }
 ];
 
@@ -1120,6 +1127,47 @@ function replyMessage(id,name,text){
 
 
     input.focus();
+
+}
+
+function sendFile(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function(){
+
+
+        ws.send(JSON.stringify({
+
+            type:"file",
+
+            name:file.name,
+
+            data:reader.result
+
+        }));
+
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+
+    event.target.value="";
 
 }
 
