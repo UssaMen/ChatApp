@@ -422,15 +422,20 @@ select {
             </button>
         </div>
 
+        <button onclick="document.getElementById('file-input').click()">
+        📎
+        </button>
+
+        <input
+            type="file"
+            id="file-input"
+            style="display:none;"
+            onchange="sendFile(event)"
+        >
+
         <button onclick="sendUrgent()">
             🚨
         </button>
-
-        <input 
-            type="file"
-            id="file-input"
-            onchange="sendFile(event)"
-        >
 
         <button onclick="sendMessage()">
             送信
