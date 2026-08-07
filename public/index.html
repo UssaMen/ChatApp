@@ -422,7 +422,7 @@ select {
             </button>
         </div>
 
-        <button onclick="document.getElementById('file-input').click()">
+        <button onclick="selectFile()">
         📎
         </button>
 
@@ -430,8 +430,11 @@ select {
             type="file"
             id="file-input"
             style="display:none;"
-            onchange="sendFile(event)"
+            onchange="selectFileDone(event)"
         >
+
+        <span id="selected-file">
+        </span>
 
         <button onclick="sendUrgent()">
             🚨
@@ -498,6 +501,7 @@ const ws = new WebSocket(location.origin.replace("http", "ws"));
 let myName = "";
 let myId = "";
 let replyTarget = null;
+let selectedFile = null;
 
 ws.onopen = function()
 {
@@ -863,6 +867,51 @@ function sendMessage()
         return;
     }
 
+    if(selectedFile)
+    {
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload=function(){
+
+            ws.send(JSON.stringify({
+
+                type:"file",
+
+                name:selectedFile.name,
+
+                data:reader.result
+
+            }));
+
+
+        };
+
+
+        reader.readAsDataURL(
+            selectedFile
+        );
+
+
+        selectedFile=null;
+
+
+        document.getElementById(
+            "selected-file"
+        ).innerHTML="";
+
+
+        document.getElementById(
+            "file-input"
+        ).value="";
+
+
+        return;
+
+    }
+
     ws.send(JSON.stringify({
 
         type:"message",
@@ -1165,44 +1214,33 @@ function replyMessage(id,name,text){
 
 }
 
-function sendFile(event){
+function selectFileDone(event){
 
-    const file =
+    selectedFile =
         event.target.files[0];
 
 
-    if(!file){
+    if(!selectedFile){
 
         return;
 
     }
 
 
-    const reader =
-        new FileReader();
+    document.getElementById(
+        "selected-file"
+    ).innerHTML =
+
+    "📎 " + selectedFile.name;
 
 
-    reader.onload = function(){
+}
 
+function selectFile(){
 
-        ws.send(JSON.stringify({
-
-            type:"file",
-
-            name:file.name,
-
-            data:reader.result
-
-        }));
-
-
-    };
-
-
-    reader.readAsDataURL(file);
-
-
-    event.target.value="";
+    document
+    .getElementById("file-input")
+    .click();
 
 }
 
