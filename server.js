@@ -222,36 +222,6 @@ wss.on("connection", (ws) => {
 
         }
 
-        if(data.type === "file")
-        {
-
-            const messages =
-                document.getElementById("messages");
-
-            messages.innerHTML += `
-
-            <div class="message left">
-                <div>
-                    <div class="name">
-                        📎 ${data.name}
-                    </div>
-                    <div class="balloon">
-                        <a
-                        href="${data.fileData}"
-                        download="${data.fileName}">
-                        📎 ${data.fileName}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            `;
-
-            scrollToBottom();
-
-            return;
-
-        }
-
         if (data.type === "image")
         {
             broadcastRoom(
